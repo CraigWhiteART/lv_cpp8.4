@@ -26,7 +26,7 @@ namespace lv {
  *
  * Size: sizeof(void*) — pointer-sized
  */
-class FragmentManager {
+class [[deprecated("Fragment is deprecated in LVGL 9.5. Use lv::Component instead.")]] FragmentManager {
     lv_fragment_manager_t* m_mgr = nullptr;
 
 public:
