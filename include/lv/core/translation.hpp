@@ -156,7 +156,7 @@ public:
      * @param lang Language code (e.g., "en", "de")
      * @return true on success
      */
-    bool add_language(const char* lang) noexcept {
+    [[nodiscard]] bool add_language(const char* lang) noexcept {
         return m_pack && lv_translation_add_language(m_pack, lang) == LV_RESULT_OK;
     }
 
@@ -177,7 +177,7 @@ public:
      * @return true on success
      */
     template<size_t N>
-    bool add_translation(const char* tag_name, const char* const (&translations)[N]) noexcept {
+    [[nodiscard]] bool add_translation(const char* tag_name, const char* const (&translations)[N]) noexcept {
         if (!m_pack) return false;
 
         lv_translation_tag_dsc_t* tag = lv_translation_add_tag(m_pack, tag_name);
@@ -197,7 +197,7 @@ public:
      * @param tag_name The tag/key name
      * @return Tag descriptor for setting translations
      */
-    lv_translation_tag_dsc_t* add_tag(const char* tag_name) noexcept {
+    [[nodiscard]] lv_translation_tag_dsc_t* add_tag(const char* tag_name) noexcept {
         return m_pack ? lv_translation_add_tag(m_pack, tag_name) : nullptr;
     }
 

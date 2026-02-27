@@ -94,12 +94,12 @@ public:
     // ==================== Header ====================
 
     /// Add header with month/year and navigation arrows
-    ObjectView header_arrow() noexcept {
+    [[nodiscard]] ObjectView header_arrow() noexcept {
         return ObjectView(lv_calendar_header_arrow_create(m_obj));
     }
 
     /// Add dropdown header for month/year selection
-    ObjectView header_dropdown() noexcept {
+    [[nodiscard]] ObjectView header_dropdown() noexcept {
         return ObjectView(lv_calendar_header_dropdown_create(m_obj));
     }
 

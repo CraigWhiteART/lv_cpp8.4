@@ -89,7 +89,7 @@ public:
 
     /// Create timer with member function callback (zero-cost trampoline)
     template<auto MemFn, typename T>
-    static Timer create(uint32_t period_ms, T* instance) noexcept {
+    [[nodiscard]] static Timer create(uint32_t period_ms, T* instance) noexcept {
         if constexpr (detail::is_void_member_v<MemFn>) {
             return Timer(&detail::TimerMemberTrampolineNoArg<MemFn, T>::callback, period_ms, instance);
         } else {
@@ -216,7 +216,7 @@ public:
     }
 
     /// Release ownership (timer won't be deleted in destructor)
-    lv_timer_t* release() noexcept {
+    [[nodiscard]] lv_timer_t* release() noexcept {
         m_owned = false;
         return m_timer;
     }

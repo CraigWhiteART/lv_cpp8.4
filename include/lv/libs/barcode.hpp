@@ -130,7 +130,7 @@ public:
      * @param text Text to encode
      * @return true if successful
      */
-    bool data(const char* text) noexcept {
+    [[nodiscard]] bool data(const char* text) noexcept {
         return lv_barcode_update(m_obj, text) == LV_RESULT_OK;
     }
 

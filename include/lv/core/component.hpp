@@ -96,7 +96,7 @@ private:
     /// Scan event descriptors on obj for root_delete_cb; return owning Derived*.
     /// The callback address &Component::root_delete_cb is unique per Derived type,
     /// so this is type-safe. Uses only public, stable LVGL APIs.
-    static Derived* owner_from_obj(lv_obj_t* obj) noexcept {
+    [[nodiscard]] static Derived* owner_from_obj(lv_obj_t* obj) noexcept {
         if (!obj) return nullptr;
         const uint32_t n = lv_obj_get_event_count(obj);
         for (uint32_t i = 0; i < n; ++i) {

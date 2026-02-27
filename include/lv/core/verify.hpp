@@ -273,8 +273,7 @@ static_assert(sizeof(Monkey) == sizeof(void*),
 #endif
 
 #if LV_USE_FRAGMENT
-static_assert(sizeof(FragmentManager) == sizeof(void*),
-    "FragmentManager must be pointer-sized");
+// FragmentManager is [[deprecated]] in LVGL 9.5 — no need to verify its layout
 #endif
 
 #if LV_USE_SVG
