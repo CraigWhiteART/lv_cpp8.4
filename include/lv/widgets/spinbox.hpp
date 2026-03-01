@@ -19,7 +19,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Spinbox : public ObjectView,
+class LV_EMPTY_BASES Spinbox : public ObjectView,
             public ObjectMixin<Spinbox>,
                 public EventMixin<Spinbox>,
                 public StyleMixin<Spinbox> {

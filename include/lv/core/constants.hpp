@@ -369,27 +369,35 @@ namespace kEvent {
     constexpr auto pressing            = LV_EVENT_PRESSING;
     constexpr auto press_lost          = LV_EVENT_PRESS_LOST;
     constexpr auto short_clicked       = LV_EVENT_SHORT_CLICKED;
-    constexpr auto single_clicked      = LV_EVENT_SINGLE_CLICKED;
-    constexpr auto double_clicked      = LV_EVENT_DOUBLE_CLICKED;
-    constexpr auto triple_clicked      = LV_EVENT_TRIPLE_CLICKED;
+#if LV_VERSION_AT_LEAST(9, 0, 0)
+    constexpr auto single_clicked      = LV_EVENT_SINGLE_CLICKED;      ///< @since LVGL 9.0
+    constexpr auto double_clicked      = LV_EVENT_DOUBLE_CLICKED;      ///< @since LVGL 9.0
+    constexpr auto triple_clicked      = LV_EVENT_TRIPLE_CLICKED;      ///< @since LVGL 9.0
+#endif
     constexpr auto long_pressed        = LV_EVENT_LONG_PRESSED;
     constexpr auto long_pressed_repeat = LV_EVENT_LONG_PRESSED_REPEAT;
     constexpr auto clicked             = LV_EVENT_CLICKED;
     constexpr auto released            = LV_EVENT_RELEASED;
     constexpr auto scroll_begin        = LV_EVENT_SCROLL_BEGIN;
-    constexpr auto scroll_throw_begin  = LV_EVENT_SCROLL_THROW_BEGIN;
+#if LV_VERSION_AT_LEAST(9, 0, 0)
+    constexpr auto scroll_throw_begin  = LV_EVENT_SCROLL_THROW_BEGIN;  ///< @since LVGL 9.0
+#endif
     constexpr auto scroll_end          = LV_EVENT_SCROLL_END;
     constexpr auto scroll              = LV_EVENT_SCROLL;
     constexpr auto gesture             = LV_EVENT_GESTURE;
     constexpr auto key                 = LV_EVENT_KEY;
-    constexpr auto rotary              = LV_EVENT_ROTARY;
+#if LV_VERSION_AT_LEAST(9, 0, 0)
+    constexpr auto rotary              = LV_EVENT_ROTARY;              ///< @since LVGL 9.0
+#endif
     constexpr auto focused             = LV_EVENT_FOCUSED;
     constexpr auto defocused           = LV_EVENT_DEFOCUSED;
     constexpr auto leave               = LV_EVENT_LEAVE;
     constexpr auto hit_test            = LV_EVENT_HIT_TEST;
-    constexpr auto indev_reset         = LV_EVENT_INDEV_RESET;
-    constexpr auto hover_over          = LV_EVENT_HOVER_OVER;
-    constexpr auto hover_leave         = LV_EVENT_HOVER_LEAVE;
+#if LV_VERSION_AT_LEAST(9, 0, 0)
+    constexpr auto indev_reset         = LV_EVENT_INDEV_RESET;         ///< @since LVGL 9.0
+    constexpr auto hover_over          = LV_EVENT_HOVER_OVER;          ///< @since LVGL 9.0
+    constexpr auto hover_leave         = LV_EVENT_HOVER_LEAVE;         ///< @since LVGL 9.0
+#endif
 
     // -------------------- Widget: Drawing events --------------------
     // These fire on widgets during rendering
@@ -401,7 +409,9 @@ namespace kEvent {
     constexpr auto draw_post_begin     = LV_EVENT_DRAW_POST_BEGIN;
     constexpr auto draw_post           = LV_EVENT_DRAW_POST;
     constexpr auto draw_post_end       = LV_EVENT_DRAW_POST_END;
-    constexpr auto draw_task_added     = LV_EVENT_DRAW_TASK_ADDED;  ///< Requires LV_OBJ_FLAG_SEND_DRAW_TASK_EVENTS
+#if LV_VERSION_AT_LEAST(9, 0, 0)
+    constexpr auto draw_task_added     = LV_EVENT_DRAW_TASK_ADDED;  ///< Requires LV_OBJ_FLAG_SEND_DRAW_TASK_EVENTS, @since LVGL 9.0
+#endif
 
     // -------------------- Widget: Value/state events --------------------
     // These fire on widgets when their value or state changes
@@ -416,7 +426,9 @@ namespace kEvent {
 
     // -------------------- Widget: Lifecycle events --------------------
     // These fire on widgets during creation, deletion, and structural changes
-    constexpr auto create              = LV_EVENT_CREATE;
+#if LV_VERSION_AT_LEAST(9, 0, 0)
+    constexpr auto create              = LV_EVENT_CREATE;              ///< @since LVGL 9.0
+#endif
     constexpr auto delete_             = LV_EVENT_DELETE;
     constexpr auto child_changed       = LV_EVENT_CHILD_CHANGED;
     constexpr auto child_created       = LV_EVENT_CHILD_CREATED;
@@ -436,10 +448,12 @@ namespace kEvent {
     // -------------------- Display events (lv_display_t) --------------------
     // NOTE: These fire on DISPLAY objects, not widgets!
     // Register with lv_display_add_event_cb(), not widget.on()
-    constexpr auto invalidate_area         = LV_EVENT_INVALIDATE_AREA;   ///< Display: area invalidated for redraw
-    constexpr auto resolution_changed      = LV_EVENT_RESOLUTION_CHANGED;///< Display: resolution or rotation changed
-    constexpr auto color_format_changed    = LV_EVENT_COLOR_FORMAT_CHANGED; ///< Display: color format changed
-    constexpr auto refr_request            = LV_EVENT_REFR_REQUEST;      ///< Display: redraw requested
+#if LV_VERSION_AT_LEAST(9, 0, 0)
+    constexpr auto invalidate_area         = LV_EVENT_INVALIDATE_AREA;   ///< Display: area invalidated for redraw, @since LVGL 9.0
+    constexpr auto resolution_changed      = LV_EVENT_RESOLUTION_CHANGED;///< Display: resolution or rotation changed, @since LVGL 9.0
+    constexpr auto color_format_changed    = LV_EVENT_COLOR_FORMAT_CHANGED; ///< Display: color format changed, @since LVGL 9.0
+    constexpr auto refr_request            = LV_EVENT_REFR_REQUEST;      ///< Display: redraw requested, @since LVGL 9.0
+#endif
     constexpr auto refr_start              = LV_EVENT_REFR_START;        ///< Display: refresh cycle starting
     constexpr auto refr_ready              = LV_EVENT_REFR_READY;        ///< Display: refresh cycle complete
     constexpr auto render_start            = LV_EVENT_RENDER_START;      ///< Display: rendering starting
@@ -451,8 +465,10 @@ namespace kEvent {
 #ifdef LV_EVENT_UPDATE_LAYOUT_COMPLETED
     constexpr auto update_layout_completed = LV_EVENT_UPDATE_LAYOUT_COMPLETED; ///< Display: layout update complete
 #endif
-    constexpr auto vsync                   = LV_EVENT_VSYNC;             ///< Display: vsync signal received
+#if LV_VERSION_AT_LEAST(9, 0, 0)
+    constexpr auto vsync                   = LV_EVENT_VSYNC;             ///< Display: vsync signal received, @since LVGL 9.0
     constexpr auto vsync_request           = LV_EVENT_VSYNC_REQUEST;     ///< Display: vsync requested
+#endif
 
     // -------------------- Special --------------------
     constexpr auto all                 = LV_EVENT_ALL;        ///< Match all events

@@ -12,8 +12,26 @@
  */
 
 #include <lvgl.h>
+#include "version.hpp"
 #include <cstdint>
 #include <cstddef>
+
+/*=============================
+ * LVGL 8.x Compatibility - TinyTTF Font Kerning
+ *=============================*/
+#if !LV_VERSION_AT_LEAST(9, 0, 0)
+
+// lv_font_kerning_t doesn't exist in 8.x, define it for API compatibility
+#ifndef LV_FONT_KERNING_NORMAL
+#define LV_FONT_KERNING_NORMAL 0
+#endif
+#ifndef LV_FONT_KERNING_NONE
+#define LV_FONT_KERNING_NONE 1
+#endif
+
+typedef uint8_t lv_font_kerning_t;
+
+#endif /* !LV_VERSION_AT_LEAST(9, 0, 0) */
 
 namespace lv {
 

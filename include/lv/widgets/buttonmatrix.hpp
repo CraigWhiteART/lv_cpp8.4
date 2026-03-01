@@ -19,7 +19,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class ButtonMatrix : public ObjectView,
+class LV_EMPTY_BASES ButtonMatrix : public ObjectView,
             public ObjectMixin<ButtonMatrix>,
                      public EventMixin<ButtonMatrix>,
                      public StyleMixin<ButtonMatrix> {

@@ -9,6 +9,8 @@
 #include "../core/object.hpp"
 #include "../core/event.hpp"
 #include "../core/style.hpp"
+#include "../core/version.hpp"
+#include <cstring>
 
 namespace lv {
 
@@ -19,7 +21,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Dropdown : public ObjectView,
+class LV_EMPTY_BASES Dropdown : public ObjectView,
             public ObjectMixin<Dropdown>,
                  public EventMixin<Dropdown>,
                  public StyleMixin<Dropdown> {
@@ -62,7 +64,20 @@ public:
 
     /// Get number of options
     [[nodiscard]] uint32_t option_count() const noexcept {
+#if LV_VERSION_AT_LEAST(9, 0, 0)
         return lv_dropdown_get_option_count(m_obj);
+#else
+        // In LVGL 8.x, count by iterating through options string
+        const char* opts = lv_dropdown_get_options(m_obj);
+        if (!opts) return 0;
+        uint32_t count = 0;
+        for (const char* p = opts; *p; ++p) {
+            if (*p == '\n') ++count;
+        }
+        // Count last option if not empty
+        if (opts[0] && opts[strlen(opts) - 1] != '\n') ++count;
+        return count;
+#endif
     }
 
     // ==================== Selection ====================

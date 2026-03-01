@@ -9,6 +9,7 @@
 #include "../core/object.hpp"
 #include "../core/event.hpp"
 #include "../core/style.hpp"
+#include "../core/version.hpp"
 
 namespace lv {
 
@@ -23,7 +24,7 @@ template<typename T> class State;  // forward declaration for bind()
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Slider : public ObjectView,
+class LV_EMPTY_BASES Slider : public ObjectView,
                public ObjectMixin<Slider>,
                public EventMixin<Slider>,
                public StyleMixin<Slider> {
@@ -60,14 +61,20 @@ public:
     // ==================== Range ====================
 
     /// Get minimum value
-    [[nodiscard]] int32_t min() const noexcept {
+    [[nodiscard]] int32_t (min)() const noexcept {
         return lv_slider_get_min_value(m_obj);
     }
 
+    /// Alias for min() - cleaner API without parentheses
+    [[nodiscard]] int32_t min_value() const noexcept { return (min)(); }
+
     /// Get maximum value
-    [[nodiscard]] int32_t max() const noexcept {
+    [[nodiscard]] int32_t (max)() const noexcept {
         return lv_slider_get_max_value(m_obj);
     }
+
+    /// Alias for max() - cleaner API without parentheses
+    [[nodiscard]] int32_t max_value() const noexcept { return (max)(); }
 
     /// Set range
     Slider& range(int32_t min_val, int32_t max_val) noexcept {
@@ -113,7 +120,12 @@ public:
 
     /// Set start value (range mode) - same as left_value
     Slider& start_value(int32_t val, bool animate = false) noexcept {
+#if LV_VERSION_AT_LEAST(9, 0, 0)
         lv_slider_set_start_value(m_obj, val, animate ? LV_ANIM_ON : LV_ANIM_OFF);
+#else
+        // In LVGL 8.x, use left value API
+        lv_slider_set_left_value(m_obj, val, animate ? LV_ANIM_ON : LV_ANIM_OFF);
+#endif
         return *this;
     }
 

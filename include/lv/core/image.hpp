@@ -11,6 +11,7 @@
  */
 
 #include <lvgl.h>
+#include "version.hpp"
 #include <cstdint>
 #include <cstring>
 
@@ -92,7 +93,14 @@ public:
 
     /// Get stride (bytes per row)
     [[nodiscard]] uint32_t stride() const noexcept {
+#if LV_VERSION_AT_LEAST(9, 0, 0)
         return m_dsc ? m_dsc->header.stride : 0;
+#else
+        // In LVGL 8.x, stride must be calculated from width and bpp
+        if (!m_dsc) return 0;
+        uint8_t bpp = lv_color_format_get_bpp(static_cast<lv_color_format_t>(m_dsc->header.cf));
+        return (m_dsc->header.w * bpp + 7) / 8;
+#endif
     }
 
     /// Get data pointer

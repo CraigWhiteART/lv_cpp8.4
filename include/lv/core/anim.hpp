@@ -9,6 +9,7 @@
 
 #include <lvgl.h>
 #include "object.hpp"
+#include "version.hpp"
 
 namespace lv {
 
@@ -152,7 +153,11 @@ public:
     Anim& exec_arc_rotation(ObjectView obj) noexcept {
         lv_anim_set_var(&m_anim, obj.get());
         lv_anim_set_exec_cb(&m_anim, [](void* v, int32_t val) {
+#if LV_VERSION_AT_LEAST(9, 0, 0)
             lv_arc_set_rotation(static_cast<lv_obj_t*>(v), static_cast<lv_value_precise_t>(val));
+#else
+            lv_arc_set_rotation(static_cast<lv_obj_t*>(v), static_cast<int32_t>(val));
+#endif
         });
         return *this;
     }
@@ -239,7 +244,11 @@ public:
     Anim& exec_arc_start_angle(ObjectView obj) noexcept {
         lv_anim_set_var(&m_anim, obj.get());
         lv_anim_set_exec_cb(&m_anim, [](void* v, int32_t val) {
+#if LV_VERSION_AT_LEAST(9, 0, 0)
             lv_arc_set_start_angle(static_cast<lv_obj_t*>(v), static_cast<lv_value_precise_t>(val));
+#else
+            lv_arc_set_start_angle(static_cast<lv_obj_t*>(v), static_cast<int32_t>(val));
+#endif
         });
         return *this;
     }
@@ -248,7 +257,11 @@ public:
     Anim& exec_arc_end_angle(ObjectView obj) noexcept {
         lv_anim_set_var(&m_anim, obj.get());
         lv_anim_set_exec_cb(&m_anim, [](void* v, int32_t val) {
+#if LV_VERSION_AT_LEAST(9, 0, 0)
             lv_arc_set_end_angle(static_cast<lv_obj_t*>(v), static_cast<lv_value_precise_t>(val));
+#else
+            lv_arc_set_end_angle(static_cast<lv_obj_t*>(v), static_cast<int32_t>(val));
+#endif
         });
         return *this;
     }
@@ -376,7 +389,11 @@ public:
 
     /// Enable reverse playback (yo-yo)
     Anim& playback(uint32_t delay_ms = 0) noexcept {
+#if LV_VERSION_AT_LEAST(9, 0, 0)
         lv_anim_set_playback_duration(&m_anim, m_anim.duration);
+#else
+        lv_anim_set_playback_time(&m_anim, m_anim.time);
+#endif
         lv_anim_set_playback_delay(&m_anim, delay_ms);
         return *this;
     }
@@ -479,29 +496,33 @@ public:
 
 // ==================== Animation Control ====================
 
-/// Delete all animations on an object
+/// Delete all animations on an object (LVGL 9.x only)
+#if LV_VERSION_AT_LEAST(9, 0, 0)
 inline void anim_delete(ObjectView obj) {
     lv_anim_delete(obj.get(), nullptr);
 }
 
-/// Delete animations with specific exec callback
+/// Delete animations with specific exec callback (LVGL 9.x only)
 inline void anim_delete(ObjectView obj, lv_anim_exec_xcb_t exec_cb) {
     lv_anim_delete(obj.get(), exec_cb);
 }
+#endif
 
 /// Get running animation on object
 inline lv_anim_t* anim_get(ObjectView obj, lv_anim_exec_xcb_t exec_cb) {
     return lv_anim_get(obj.get(), exec_cb);
 }
 
-/// Pause animation
+/// Pause animation (LVGL 9.x only)
+#if LV_VERSION_AT_LEAST(9, 0, 0)
 inline void anim_pause(lv_anim_t* a) {
     lv_anim_pause(a);
 }
 
-/// Resume animation
+/// Resume animation (LVGL 9.x only)
 inline void anim_resume(lv_anim_t* a) {
     lv_anim_resume(a);
 }
+#endif
 
 } // namespace lv

@@ -14,8 +14,27 @@
  */
 
 #include <lvgl.h>
+#include "../core/version.hpp"
 
 #if LV_USE_FRAGMENT
+
+/*=============================
+ * LVGL 8.x Compatibility - Fragment Manager
+ *=============================*/
+#if !LV_VERSION_AT_LEAST(9, 0, 0)
+
+// lv_fragment_manager_delete doesn't exist in 8.x, use lv_fragment_manager_destroy
+#ifndef lv_fragment_manager_delete
+#define lv_fragment_manager_delete lv_fragment_manager_destroy
+#endif
+
+// lv_fragment_manager_delete_obj doesn't exist in 8.x - stub it
+static inline void lv_fragment_manager_delete_obj(lv_fragment_manager_t* mgr) {
+    (void)mgr;
+    // Not available in LVGL 8.x
+}
+
+#endif /* !LV_VERSION_AT_LEAST(9, 0, 0) */
 
 namespace lv {
 

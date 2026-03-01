@@ -46,6 +46,7 @@
  */
 
 #include <lvgl.h>
+#include "version.hpp"  // For LVGL 8.x compatibility macros
 #include <type_traits>
 #include <concepts>
 #include <cstring>
@@ -269,7 +270,7 @@ struct MemberTrampolineNoArg {
  * For display events, use: lv_display_add_event_cb(display, callback, code, user_data)
  */
 template<typename Derived>
-class EventMixin {
+class LV_EMPTY_BASES EventMixin {
 private:
     [[nodiscard]] lv_obj_t* obj() noexcept {
         return static_cast<Derived*>(this)->get();

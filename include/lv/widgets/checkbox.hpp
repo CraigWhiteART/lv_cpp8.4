@@ -19,7 +19,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Checkbox : public ObjectView,
+class LV_EMPTY_BASES Checkbox : public ObjectView,
             public ObjectMixin<Checkbox>,
                  public EventMixin<Checkbox>,
                  public StyleMixin<Checkbox> {

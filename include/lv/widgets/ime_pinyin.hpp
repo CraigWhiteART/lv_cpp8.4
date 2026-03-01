@@ -42,7 +42,7 @@ struct IMEPinyinMode {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class IMEPinyin : public ObjectView,
+class LV_EMPTY_BASES IMEPinyin : public ObjectView,
                   public ObjectMixin<IMEPinyin>,
                   public EventMixin<IMEPinyin>,
                   public StyleMixin<IMEPinyin> {

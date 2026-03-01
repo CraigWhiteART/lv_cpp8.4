@@ -9,6 +9,7 @@
 #include "../core/object.hpp"
 #include "../core/event.hpp"
 #include "../core/style.hpp"
+#include "../core/version.hpp"
 
 namespace lv {
 
@@ -19,7 +20,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Spinner : public ObjectView,
+class LV_EMPTY_BASES Spinner : public ObjectView,
             public ObjectMixin<Spinner>,
                 public EventMixin<Spinner>,
                 public StyleMixin<Spinner> {
@@ -28,9 +29,14 @@ public:
     constexpr Spinner(wrap_t, lv_obj_t* obj) noexcept : ObjectView(obj) {}
 
     [[nodiscard]] static Spinner create(lv_obj_t* parent, uint32_t anim_time = 1000, uint32_t arc_length = 60) {
+#if LV_VERSION_AT_LEAST(9, 0, 0)
         auto spinner = Spinner(wrap, lv_spinner_create(parent));
         lv_spinner_set_anim_params(spinner.get(), anim_time, arc_length);
         return spinner;
+#else
+        // LVGL 8.x uses different API: lv_spinner_create(parent, spin_time, arc_length)
+        return Spinner(wrap, lv_spinner_create(parent, anim_time, arc_length));
+#endif
     }
     [[nodiscard]] static Spinner create(ObjectView parent, uint32_t anim_time = 1000, uint32_t arc_length = 60) {
         return create(parent.get(), anim_time, arc_length);
@@ -40,7 +46,13 @@ public:
 
     /// Set animation parameters
     Spinner& anim_params(uint32_t time_ms, uint32_t arc_length) noexcept {
+#if LV_VERSION_AT_LEAST(9, 0, 0)
         lv_spinner_set_anim_params(m_obj, time_ms, arc_length);
+#else
+        (void)time_ms;
+        (void)arc_length;
+        // Not available in LVGL 8.x - params are set at creation time
+#endif
         return *this;
     }
 

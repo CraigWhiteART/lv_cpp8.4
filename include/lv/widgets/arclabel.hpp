@@ -65,7 +65,7 @@ struct ArcLabelAlign {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class ArcLabel : public ObjectView,
+class LV_EMPTY_BASES ArcLabel : public ObjectView,
             public ObjectMixin<ArcLabel>,
                  public EventMixin<ArcLabel>,
                  public StyleMixin<ArcLabel> {

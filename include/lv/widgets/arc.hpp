@@ -9,6 +9,7 @@
 #include "../core/object.hpp"
 #include "../core/event.hpp"
 #include "../core/style.hpp"
+#include "../core/version.hpp"
 
 namespace lv {
 
@@ -19,7 +20,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Arc : public ObjectView,
+class LV_EMPTY_BASES Arc : public ObjectView,
             public ObjectMixin<Arc>,
             public EventMixin<Arc>,
             public StyleMixin<Arc> {
@@ -131,6 +132,7 @@ public:
 
     // ==================== Appearance ====================
 
+#if LV_VERSION_AT_LEAST(9, 0, 0)
     /// Set rotation offset for the whole arc
     Arc& rotation(int32_t angle) noexcept {
         lv_arc_set_rotation(m_obj, angle);
@@ -147,6 +149,24 @@ public:
         lv_arc_set_knob_offset(m_obj, offset);
         return *this;
     }
+#else
+    /// Set rotation offset for the whole arc (not available in 8.x)
+    Arc& rotation(int32_t angle) noexcept {
+        (void)angle;
+        return *this;
+    }
+
+    /// Get rotation (not available in 8.x)
+    [[nodiscard]] int32_t rotation() const noexcept {
+        return 0;
+    }
+
+    /// Set knob offset (not available in 8.x)
+    Arc& knob_offset(int32_t offset) noexcept {
+        (void)offset;
+        return *this;
+    }
+#endif
 
     /// Rotate an object to align with the arc's current angle
     /// @param obj_to_rotate Object to rotate

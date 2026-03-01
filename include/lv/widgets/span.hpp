@@ -19,7 +19,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Spangroup : public ObjectView,
+class LV_EMPTY_BASES Spangroup : public ObjectView,
             public ObjectMixin<Spangroup>,
                   public EventMixin<Spangroup>,
                   public StyleMixin<Spangroup> {

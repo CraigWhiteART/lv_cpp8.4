@@ -10,6 +10,7 @@
 #include "../core/event.hpp"
 #include "../core/style.hpp"
 #include "../core/string_utils.hpp"
+#include "../core/version.hpp"
 #include <string_view>
 #include <type_traits>
 
@@ -27,7 +28,7 @@ template<typename T> class State;
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Label : public ObjectView,
+class LV_EMPTY_BASES Label : public ObjectView,
               public ObjectMixin<Label>,
               public EventMixin<Label>,
               public StyleMixin<Label> {
@@ -125,6 +126,7 @@ public:
 
     // ==================== Text Selection ====================
 
+#if LV_VERSION_AT_LEAST(9, 0, 0)
     /// Enable text selection
     Label& selectable(bool enable = true) noexcept {
         if (enable) {
@@ -140,6 +142,20 @@ public:
         lv_label_set_text_selection_end(m_obj, end);
         return *this;
     }
+#else
+    /// Enable text selection (not available in LVGL 8.x)
+    Label& selectable(bool enable = true) noexcept {
+        (void)enable;
+        return *this;
+    }
+
+    /// Set selection range (not available in LVGL 8.x)
+    Label& selection(uint32_t start, uint32_t end) noexcept {
+        (void)start;
+        (void)end;
+        return *this;
+    }
+#endif
 
     // ==================== Recolor ====================
 

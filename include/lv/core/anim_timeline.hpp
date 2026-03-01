@@ -24,6 +24,7 @@
 
 #include <lvgl.h>
 #include "anim.hpp"
+#include "version.hpp"
 
 namespace lv {
 
@@ -62,7 +63,9 @@ public:
 
     AnimTimeline& operator=(AnimTimeline&& other) noexcept {
         if (this != &other) {
+#if LV_VERSION_AT_LEAST(9, 0, 0)
             if (m_timeline) lv_anim_timeline_delete(m_timeline);
+#endif
             m_timeline = other.m_timeline;
             other.m_timeline = nullptr;
         }
@@ -82,21 +85,35 @@ public:
 
     /// Add an animation at a given start time (ms offset from timeline start)
     AnimTimeline& add(uint32_t start_time, const Anim& anim) noexcept {
+#if LV_VERSION_AT_LEAST(9, 0, 0)
         lv_anim_timeline_add(m_timeline, start_time, anim.get());
+#else
+        // LVGL 8.x copies the anim internally, so we need to pass a copy
+        lv_anim_t anim_copy = *anim.get();
+        lv_anim_timeline_add(m_timeline, start_time, &anim_copy);
+#endif
         return *this;
     }
 
     /// Add a raw lv_anim_t at a given start time
     AnimTimeline& add(uint32_t start_time, const lv_anim_t* anim) noexcept {
+#if LV_VERSION_AT_LEAST(9, 0, 0)
         lv_anim_timeline_add(m_timeline, start_time, anim);
+#else
+        // LVGL 8.x copies the anim internally, so we need to pass a copy
+        lv_anim_t anim_copy = *anim;
+        lv_anim_timeline_add(m_timeline, start_time, &anim_copy);
+#endif
         return *this;
     }
 
-    /// Set initial delay before timeline starts
+    /// Set initial delay before timeline starts (LVGL 9.x only)
+#if LV_VERSION_AT_LEAST(9, 0, 0)
     AnimTimeline& delay(uint32_t ms) noexcept {
         lv_anim_timeline_set_delay(m_timeline, ms);
         return *this;
     }
+#endif
 
     /// Enable or disable reverse playback
     AnimTimeline& reverse(bool en) noexcept {
@@ -104,17 +121,19 @@ public:
         return *this;
     }
 
-    /// Set repeat count (0 = play once, LV_ANIM_REPEAT_INFINITE for forever)
+    /// Set repeat count (0 = play once, LV_ANIM_REPEAT_INFINITE for forever) - LVGL 9.x only
+#if LV_VERSION_AT_LEAST(9, 0, 0)
     AnimTimeline& repeat(uint32_t count) noexcept {
         lv_anim_timeline_set_repeat_count(m_timeline, count);
         return *this;
     }
 
-    /// Repeat forever
+    /// Repeat forever - LVGL 9.x only
     AnimTimeline& repeat_infinite() noexcept {
         lv_anim_timeline_set_repeat_count(m_timeline, LV_ANIM_REPEAT_INFINITE);
         return *this;
     }
+#endif
 
     /// Set delay between repeats
     AnimTimeline& repeat_delay(uint32_t ms) noexcept {
@@ -141,11 +160,13 @@ public:
         return lv_anim_timeline_start(m_timeline);
     }
 
-    /// Pause playback
+    /// Pause playback (LVGL 9.x only)
+#if LV_VERSION_AT_LEAST(9, 0, 0)
     AnimTimeline& pause() noexcept {
         lv_anim_timeline_pause(m_timeline);
         return *this;
     }
+#endif
 
     /// Merge another timeline into this one
     AnimTimeline& merge(const AnimTimeline& other, int32_t delay_ms = 0) noexcept {

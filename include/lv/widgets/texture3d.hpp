@@ -37,7 +37,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Texture3D : public ObjectView,
+class LV_EMPTY_BASES Texture3D : public ObjectView,
                   public ObjectMixin<Texture3D>,
                   public EventMixin<Texture3D>,
                   public StyleMixin<Texture3D> {

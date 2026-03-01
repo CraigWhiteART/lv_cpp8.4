@@ -47,10 +47,12 @@ namespace key {
     constexpr uint32_t end = LV_KEY_END;
 } // namespace key
 
+#if LV_VERSION_AT_LEAST(9, 0, 0)
 /**
- * @brief Input device wrapper
+ * @brief Input device wrapper (LVGL 9.x only)
  *
  * Wraps LVGL's input device system.
+ * @note This class is only available in LVGL 9.x. In LVGL 8.x, use the C API directly.
  */
 class Indev {
     lv_indev_t* m_indev;
@@ -265,10 +267,11 @@ public:
 
 // ==================== Input Device Helpers ====================
 
-/// Get active (currently processing) input device
+/// Get active (currently processing) input device (LVGL 9.x only)
 inline lv_indev_t* indev_active() noexcept {
     return lv_indev_active();
 }
+#endif // LV_VERSION_AT_LEAST(9, 0, 0)
 
 /// Get next input device (for iteration)
 inline lv_indev_t* indev_next(lv_indev_t* prev = nullptr) noexcept {

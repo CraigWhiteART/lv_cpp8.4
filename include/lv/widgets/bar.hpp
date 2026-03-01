@@ -19,7 +19,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Bar : public ObjectView,
+class LV_EMPTY_BASES Bar : public ObjectView,
             public ObjectMixin<Bar>,
             public EventMixin<Bar>,
             public StyleMixin<Bar> {

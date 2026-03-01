@@ -57,18 +57,26 @@ public:
         return *this;
     }
 
+    /// Alias for rotation() - matches widget naming consistency
+    Display& angle(lv_display_rotation_t rot) noexcept { return rotation(rot); }
+
     /// Get current rotation
     [[nodiscard]] lv_display_rotation_t rotation() const noexcept {
         return lv_display_get_rotation(m_display);
     }
 
+    /// Alias for rotation() - matches widget naming consistency
+    [[nodiscard]] lv_display_rotation_t angle() const noexcept { return rotation(); }
+
     // ==================== DPI ====================
 
-    /// Set display DPI
+#if LV_VERSION_AT_LEAST(9, 0, 0)
+    /// Set display DPI (LVGL 9.x only)
     Display& dpi(int32_t val) noexcept {
         lv_display_set_dpi(m_display, val);
         return *this;
     }
+#endif
 
     /// Get display DPI
     [[nodiscard]] int32_t dpi() const noexcept {
@@ -76,6 +84,7 @@ public:
     }
 
     // ==================== Color Format ====================
+#if LV_VERSION_AT_LEAST(9, 0, 0)
 
     /// Set display color format
     Display& color_format(lv_color_format_t cf) noexcept {
@@ -87,6 +96,7 @@ public:
     [[nodiscard]] lv_color_format_t color_format() const noexcept {
         return lv_display_get_color_format(m_display);
     }
+#endif
 
     // ==================== Layers ====================
 
@@ -100,10 +110,12 @@ public:
         return ObjectView(lv_display_get_layer_sys(m_display));
     }
 
-    /// Get bottom layer (below normal screens)
+    /// Get bottom layer (below normal screens) - LVGL 9.x only
+#if LV_VERSION_AT_LEAST(9, 0, 0)
     [[nodiscard]] ObjectView layer_bottom() const noexcept {
         return ObjectView(lv_display_get_layer_bottom(m_display));
     }
+#endif
 
     // ==================== Coordinate Transform ====================
 

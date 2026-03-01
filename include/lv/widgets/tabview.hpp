@@ -19,7 +19,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Tabview : public ObjectView,
+class LV_EMPTY_BASES Tabview : public ObjectView,
             public ObjectMixin<Tabview>,
                 public EventMixin<Tabview>,
                 public StyleMixin<Tabview> {

@@ -19,7 +19,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Scale : public ObjectView,
+class LV_EMPTY_BASES Scale : public ObjectView,
             public ObjectMixin<Scale>,
               public EventMixin<Scale>,
               public StyleMixin<Scale> {

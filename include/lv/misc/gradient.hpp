@@ -6,7 +6,7 @@
  *
  * Provides a C++ fluent API for LVGL gradients. Supports:
  * - Simple 2-color gradients (horizontal, vertical)
- * - Complex gradients (linear at angles, radial, conical)
+ * - Complex gradients (linear at angles, radial, conical) - LVGL 9.x only
  * - Multi-stop gradients (up to LV_GRADIENT_MAX_STOPS colors)
  *
  * @note Complex gradients require LV_USE_DRAW_SW_COMPLEX_GRADIENTS=1 in lv_conf.h
@@ -14,15 +14,18 @@
  */
 
 #include <lvgl.h>
+#include "../core/version.hpp"
 
 namespace lv {
 
-/// Gradient extend modes (what happens beyond gradient bounds)
+#if LV_VERSION_AT_LEAST(9, 0, 0)
+/// Gradient extend modes (what happens beyond gradient bounds) - LVGL 9.x only
 namespace grad_extend {
     inline constexpr lv_grad_extend_t pad = LV_GRAD_EXTEND_PAD;         ///< Extend edge colors
     inline constexpr lv_grad_extend_t repeat = LV_GRAD_EXTEND_REPEAT;   ///< Repeat pattern: A→B, A→B
     inline constexpr lv_grad_extend_t reflect = LV_GRAD_EXTEND_REFLECT; ///< Mirror pattern: A→B, B→A
 }
+#endif // LV_VERSION_AT_LEAST(9, 0, 0)
 
 /**
  * @brief Fluent gradient descriptor wrapper
@@ -89,54 +92,76 @@ public:
 
     // ==================== Gradient Types ====================
 
-    /// Simple horizontal gradient (left to right)
+#if LV_VERSION_AT_LEAST(9, 0, 0)
+    /// Simple horizontal gradient (left to right) - LVGL 9.x only
     GradDsc& horizontal() noexcept {
         lv_grad_horizontal_init(&m_dsc);
         return *this;
     }
 
-    /// Simple vertical gradient (top to bottom)
+    /// Simple vertical gradient (top to bottom) - LVGL 9.x only
     GradDsc& vertical() noexcept {
         lv_grad_vertical_init(&m_dsc);
         return *this;
     }
+#else
+    /// Simple horizontal gradient (left to right) - not available in LVGL 8.x
+    GradDsc& horizontal() noexcept {
+        // In LVGL 8.x, use style properties instead
+        m_dsc.dir = LV_GRAD_DIR_HOR;
+        return *this;
+    }
 
-    /// Linear gradient at any angle
+    /// Simple vertical gradient (top to bottom) - not available in LVGL 8.x
+    GradDsc& vertical() noexcept {
+        // In LVGL 8.x, use style properties instead
+        m_dsc.dir = LV_GRAD_DIR_VER;
+        return *this;
+    }
+#endif // LV_VERSION_AT_LEAST(9, 0, 0)
+
+#if LV_VERSION_AT_LEAST(9, 0, 0)
+    /// Linear gradient at any angle (LVGL 9.x only)
     GradDsc& linear(int32_t from_x, int32_t from_y, int32_t to_x, int32_t to_y,
                     lv_grad_extend_t extend = LV_GRAD_EXTEND_PAD) noexcept {
         lv_grad_linear_init(&m_dsc, from_x, from_y, to_x, to_y, extend);
         return *this;
     }
 
-    /// Radial gradient
+    /// Radial gradient (LVGL 9.x only)
     GradDsc& radial(int32_t center_x, int32_t center_y, int32_t to_x, int32_t to_y,
                     lv_grad_extend_t extend = LV_GRAD_EXTEND_PAD) noexcept {
         lv_grad_radial_init(&m_dsc, center_x, center_y, to_x, to_y, extend);
         return *this;
     }
 
-    /// Set focal point for radial gradient
+    /// Set focal point for radial gradient (LVGL 9.x only)
     GradDsc& focal(int32_t center_x, int32_t center_y, int32_t radius) noexcept {
         lv_grad_radial_set_focal(&m_dsc, center_x, center_y, radius);
         return *this;
     }
 
-    /// Conical gradient
+    /// Conical gradient (LVGL 9.x only)
     GradDsc& conical(int32_t center_x, int32_t center_y,
                      int32_t start_angle, int32_t end_angle,
                      lv_grad_extend_t extend = LV_GRAD_EXTEND_PAD) noexcept {
         lv_grad_conical_init(&m_dsc, center_x, center_y, start_angle, end_angle, extend);
         return *this;
     }
+#endif // LV_VERSION_AT_LEAST(9, 0, 0)
 
     // ==================== Color Stops ====================
 
     /// Add a color stop (frac: 0-255 position)
-    GradDsc& stop(lv_color_t color, uint8_t frac, lv_opa_t opa = LV_OPA_COVER) noexcept {
+    GradDsc& stop(lv_color_t color, uint8_t frac, lv_opa_t opacity = LV_OPA_COVER) noexcept {
         if (m_dsc.stops_count < LV_GRADIENT_MAX_STOPS) {
             m_dsc.stops[m_dsc.stops_count].color = color;
             m_dsc.stops[m_dsc.stops_count].frac = frac;
-            m_dsc.stops[m_dsc.stops_count].opa = opa;
+#if LV_VERSION_AT_LEAST(9, 0, 0)
+            m_dsc.stops[m_dsc.stops_count].opa = opacity;
+#else
+            (void)opacity; // opa field not available in LVGL 8.x
+#endif
             m_dsc.stops_count++;
         }
         return *this;
@@ -150,13 +175,15 @@ public:
         return *this;
     }
 
+#if LV_VERSION_AT_LEAST(9, 0, 0)
     // ==================== Extend Mode ====================
 
-    /// Set extend mode
+    /// Set extend mode (LVGL 9.x only)
     GradDsc& extend(lv_grad_extend_t mode) noexcept {
         m_dsc.extend = mode;
         return *this;
     }
+#endif // LV_VERSION_AT_LEAST(9, 0, 0)
 };
 
 } // namespace lv

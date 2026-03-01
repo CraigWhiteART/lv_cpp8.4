@@ -19,7 +19,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Tileview : public ObjectView,
+class LV_EMPTY_BASES Tileview : public ObjectView,
             public ObjectMixin<Tileview>,
                  public EventMixin<Tileview>,
                  public StyleMixin<Tileview> {

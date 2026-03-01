@@ -43,7 +43,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Lottie : public ObjectView,
+class LV_EMPTY_BASES Lottie : public ObjectView,
                public ObjectMixin<Lottie>,
                public EventMixin<Lottie>,
                public StyleMixin<Lottie> {

@@ -4,7 +4,7 @@ This guide is for projects moving from the old `lvglpp` wrapper (in `../lvglpp`)
 
 ## Scope
 
-- `lvglpp` was written around LVGL 8-era APIs and ownership patterns.
+- `lvglpp` was written around LVGL 8.3-era APIs and ownership patterns.
 - `lv` is designed around LVGL 9 APIs, zero-cost views, and fluent chaining.
 - This is not a drop-in replacement. Expect mechanical API edits.
 

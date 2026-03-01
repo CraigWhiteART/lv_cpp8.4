@@ -19,7 +19,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class AnimImage : public ObjectView,
+class LV_EMPTY_BASES AnimImage : public ObjectView,
             public ObjectMixin<AnimImage>,
                   public EventMixin<AnimImage>,
                   public StyleMixin<AnimImage> {

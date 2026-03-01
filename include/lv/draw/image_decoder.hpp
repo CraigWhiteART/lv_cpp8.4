@@ -11,9 +11,16 @@
  *
  * @note Image decoders are used internally by LVGL for PNG, JPG, BMP, etc.
  * You can create custom decoders for proprietary formats.
+ *
+ * @warning This header is LVGL 9.x only. The image decoder API changed significantly
+ * between LVGL 8.x and 9.x. For LVGL 8.x, use the C API directly.
  */
 
 #include <lvgl.h>
+#include "../core/version.hpp"
+
+#if LV_VERSION_AT_LEAST(9, 0, 0)
+
 #include <src/draw/lv_image_decoder_private.h>  // For full struct definitions
 
 namespace lv {
@@ -346,3 +353,5 @@ inline lv_image_decoder_t* image_decoder_next(lv_image_decoder_t* prev = nullptr
 }
 
 } // namespace lv
+
+#endif /* LV_VERSION_AT_LEAST(9, 0, 0) */

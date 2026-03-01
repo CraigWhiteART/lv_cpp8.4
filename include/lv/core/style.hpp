@@ -9,6 +9,7 @@
  */
 
 #include <lvgl.h>
+#include "version.hpp"
 #include <cstdint>
 #include <type_traits>
 
@@ -539,7 +540,7 @@ static_assert(sizeof(Style) == sizeof(lv_style_t),
  * Use Style class for shared styles.
  */
 template<typename Derived>
-class StyleMixin {
+class LV_EMPTY_BASES StyleMixin {
 private:
     [[nodiscard]] lv_obj_t* obj() noexcept {
         return static_cast<Derived*>(this)->get();

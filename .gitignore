@@ -1,6 +1,7 @@
 .gitignore
 # Build directories
 build/
+build-*/
 cmake-build-*/
 
 # IDE
@@ -36,3 +37,6 @@ Thumbs.db
 docs/OBSERVER_API_PROPOSAL.md
 docs/API_COVERAGE.md
 docs/TODO.md
+
+# Agent scratchpad
+agents.md

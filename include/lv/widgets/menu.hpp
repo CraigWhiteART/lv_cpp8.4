@@ -19,7 +19,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Menu : public ObjectView,
+class LV_EMPTY_BASES Menu : public ObjectView,
             public ObjectMixin<Menu>,
              public EventMixin<Menu>,
              public StyleMixin<Menu> {

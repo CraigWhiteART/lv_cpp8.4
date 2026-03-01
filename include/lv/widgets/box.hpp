@@ -33,7 +33,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Box : public ObjectView,
+class LV_EMPTY_BASES Box : public ObjectView,
             public ObjectMixin<Box>,
             public EventMixin<Box>,
             public StyleMixin<Box> {

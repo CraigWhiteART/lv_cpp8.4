@@ -9,6 +9,7 @@
 #include "../core/object.hpp"
 #include "../core/event.hpp"
 #include "../core/style.hpp"
+#include "../core/version.hpp"
 
 namespace lv {
 
@@ -19,7 +20,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Textarea : public ObjectView,
+class LV_EMPTY_BASES Textarea : public ObjectView,
             public ObjectMixin<Textarea>,
                  public EventMixin<Textarea>,
                  public StyleMixin<Textarea> {
@@ -61,13 +62,21 @@ public:
 
     /// Delete character before cursor
     Textarea& del_char() noexcept {
+#if LV_VERSION_AT_LEAST(9, 0, 0)
         lv_textarea_delete_char(m_obj);
+#else
+        lv_textarea_del_char(m_obj);
+#endif
         return *this;
     }
 
     /// Delete character after cursor
     Textarea& del_char_forward() noexcept {
+#if LV_VERSION_AT_LEAST(9, 0, 0)
         lv_textarea_delete_char_forward(m_obj);
+#else
+        lv_textarea_del_char_forward(m_obj);
+#endif
         return *this;
     }
 

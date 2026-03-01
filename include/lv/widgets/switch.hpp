@@ -23,7 +23,7 @@ template<typename T> class State;  // forward declaration for bind()
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Switch : public ObjectView,
+class LV_EMPTY_BASES Switch : public ObjectView,
                public ObjectMixin<Switch>,
                public EventMixin<Switch>,
                public StyleMixin<Switch> {

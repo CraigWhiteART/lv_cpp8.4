@@ -9,10 +9,26 @@
  */
 
 #include <lvgl.h>
+#include "version.hpp"
 #include <string_view>
 #include <cstring>
 #include <cstddef>
 #include <cstdarg>
+
+/*=============================
+ * LVGL 8.x Compatibility - Memory Allocation
+ *=============================*/
+#if !LV_VERSION_AT_LEAST(9, 0, 0)
+
+// lv_malloc/lv_free are lv_mem_alloc/lv_mem_free in 8.x
+#ifndef lv_malloc
+#define lv_malloc(size) lv_mem_alloc(size)
+#endif
+#ifndef lv_free
+#define lv_free(ptr) lv_mem_free(ptr)
+#endif
+
+#endif /* !LV_VERSION_AT_LEAST(9, 0, 0) */
 
 namespace lv {
 

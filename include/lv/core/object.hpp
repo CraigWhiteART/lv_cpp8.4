@@ -80,7 +80,7 @@ namespace symbol {
  * Size: sizeof(void*) - typically 4 or 8 bytes
  * Overhead: Zero - just a pointer wrapper
  */
-class ObjectView {
+class LV_EMPTY_BASES ObjectView {
 protected:
     lv_obj_t* m_obj;
 
@@ -310,7 +310,7 @@ static_assert(sizeof(Object) == sizeof(void*),
  * @endcode
  */
 template<typename Derived>
-class ObjectMixin {
+class LV_EMPTY_BASES ObjectMixin {
 private:
     [[nodiscard]] lv_obj_t* obj() noexcept {
         lv_obj_t* p = static_cast<Derived*>(this)->get();
@@ -492,9 +492,11 @@ public:
     /**
      * @brief Set user data pointer
      *
-     * Safe to use on any object, including component roots.
-     * Components use event-descriptor scanning for ownership lookup
-     * and do not occupy user_data.
+     * @note LVGL 9.x: Safe to use on any object, including component roots.
+     *       Components use event-descriptor scanning for ownership lookup
+     *       and do not occupy user_data.
+     * @note LVGL 8.x: Components use user_data for ownership lookup.
+     *       Do NOT use this on component root objects when targeting 8.x.
      */
     Derived& user_data(void* data) noexcept {
         lv_obj_set_user_data(obj(), data);

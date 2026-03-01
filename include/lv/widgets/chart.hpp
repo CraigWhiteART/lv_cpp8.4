@@ -20,7 +20,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Chart : public ObjectView,
+class LV_EMPTY_BASES Chart : public ObjectView,
             public ObjectMixin<Chart>,
               public EventMixin<Chart>,
               public StyleMixin<Chart> {
@@ -179,6 +179,7 @@ public:
         return *this;
     }
 
+#if LV_VERSION_AT_LEAST(9, 0, 0)
     /// Set axis range
     Chart& axis_range(lv_chart_axis_t axis, int32_t min, int32_t max) noexcept {
         lv_chart_set_axis_range(m_obj, axis, min, max);
@@ -196,6 +197,45 @@ public:
         lv_chart_set_axis_max_value(m_obj, axis, max);
         return *this;
     }
+#else
+    /// Set axis range (uses lv_chart_set_range in 8.x)
+    Chart& axis_range(lv_chart_axis_t axis, int32_t min, int32_t max) noexcept {
+        lv_chart_set_range(m_obj, axis, min, max);
+        return *this;
+    }
+
+    /// Set axis minimum value (not available in 8.x, uses range)
+    Chart& axis_min_value(lv_chart_axis_t axis, int32_t min) noexcept {
+        auto chart = reinterpret_cast<lv_chart_t*>(m_obj);
+        int32_t current_max;
+        // Use equality checks instead of bitwise AND since LV_CHART_AXIS_PRIMARY_Y is 0
+        if (axis == LV_CHART_AXIS_PRIMARY_Y) {
+            current_max = chart->ymax[0];
+        } else if (axis == LV_CHART_AXIS_SECONDARY_Y) {
+            current_max = chart->ymax[1];
+        } else {
+            current_max = 100;  // Default for X axes
+        }
+        lv_chart_set_range(m_obj, axis, min, current_max);
+        return *this;
+    }
+
+    /// Set axis maximum value (not available in 8.x, uses range)
+    Chart& axis_max_value(lv_chart_axis_t axis, int32_t max) noexcept {
+        auto chart = reinterpret_cast<lv_chart_t*>(m_obj);
+        int32_t current_min;
+        // Use equality checks instead of bitwise AND since LV_CHART_AXIS_PRIMARY_Y is 0
+        if (axis == LV_CHART_AXIS_PRIMARY_Y) {
+            current_min = chart->ymin[0];
+        } else if (axis == LV_CHART_AXIS_SECONDARY_Y) {
+            current_min = chart->ymin[1];
+        } else {
+            current_min = 0;  // Default for X axes
+        }
+        lv_chart_set_range(m_obj, axis, current_min, max);
+        return *this;
+    }
+#endif
 
     /// Set primary Y range
     Chart& range_y(int32_t min, int32_t max) noexcept {

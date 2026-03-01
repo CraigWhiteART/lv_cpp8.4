@@ -172,6 +172,12 @@
 #if LV_USE_CHART
 #include "widgets/chart.hpp"
 #endif
+#if LV_USE_METER
+#include "widgets/meter.hpp"
+#endif
+#if LV_USE_COLORWHEEL
+#include "widgets/colorwheel.hpp"
+#endif
 #if LV_USE_SCALE
 #include "widgets/scale.hpp"
 #endif

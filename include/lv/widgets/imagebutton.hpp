@@ -19,7 +19,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class ImageButton : public ObjectView,
+class LV_EMPTY_BASES ImageButton : public ObjectView,
             public ObjectMixin<ImageButton>,
                     public EventMixin<ImageButton>,
                     public StyleMixin<ImageButton> {

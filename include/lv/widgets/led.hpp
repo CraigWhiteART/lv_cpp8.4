@@ -19,7 +19,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Led : public ObjectView,
+class LV_EMPTY_BASES Led : public ObjectView,
             public ObjectMixin<Led>,
             public EventMixin<Led>,
             public StyleMixin<Led> {

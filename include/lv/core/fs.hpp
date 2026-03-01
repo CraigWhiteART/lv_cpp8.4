@@ -28,7 +28,32 @@
  */
 
 #include <lvgl.h>
+#include "version.hpp"
 #include <cstring>
+
+/*=============================
+ * LVGL 8.x Compatibility
+ *=============================*/
+#if !LV_VERSION_AT_LEAST(9, 0, 0)
+
+// lv_fs_get_size doesn't exist in 8.x - provide stub
+static inline lv_fs_res_t lv_fs_get_size(lv_fs_file_t* file_p, uint32_t* size) {
+    (void)file_p;
+    if (size) *size = 0;
+    return LV_FS_RES_NOT_IMP;
+}
+
+// lv_fs_dir_read has different signature in 8.x (no fn_len parameter)
+static inline lv_fs_res_t lv_fs_dir_read_compat(lv_fs_dir_t* rddir_p, char* fn, uint32_t fn_len) {
+    (void)fn_len;  // Not used in 8.x
+    return lv_fs_dir_read(rddir_p, fn);
+}
+
+#else
+
+#define lv_fs_dir_read_compat lv_fs_dir_read
+
+#endif
 
 namespace lv::fs {
 
@@ -250,7 +275,7 @@ public:
 
     /// Read next directory entry into buffer. Returns empty name at end of listing.
     lv_fs_res_t read(char* fn, uint32_t fn_len) noexcept {
-        return lv_fs_dir_read(&m_dir, fn, fn_len);
+        return lv_fs_dir_read_compat(&m_dir, fn, fn_len);
     }
 
     // ==================== Raw Access ====================

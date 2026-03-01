@@ -19,7 +19,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Window : public ObjectView,
+class LV_EMPTY_BASES Window : public ObjectView,
             public ObjectMixin<Window>,
                public EventMixin<Window>,
                public StyleMixin<Window> {

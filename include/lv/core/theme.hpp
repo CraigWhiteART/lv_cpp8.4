@@ -125,10 +125,12 @@ inline bool theme_default_is_inited() noexcept {
     return lv_theme_default_is_inited();
 }
 
-/// Deinitialize default theme
+#if LV_VERSION_AT_LEAST(9, 0, 0)
+/// Deinitialize default theme (LVGL 9.x only)
 inline void theme_default_deinit() noexcept {
     lv_theme_default_deinit();
 }
+#endif // LV_VERSION_AT_LEAST(9, 0, 0)
 
 #endif // LV_USE_THEME_DEFAULT
 
@@ -167,20 +169,22 @@ inline lv_theme_t* theme_mono_init(lv_display_t* disp, bool dark_bg, const lv_fo
     return lv_theme_mono_init(disp, dark_bg, font);
 }
 
-/// Get mono theme
+#if LV_VERSION_AT_LEAST(9, 0, 0)
+/// Get mono theme (LVGL 9.x only)
 inline lv_theme_t* theme_mono_get() noexcept {
     return lv_theme_mono_get();
 }
 
-/// Check if mono theme is inited
+/// Check if mono theme is inited (LVGL 9.x only)
 inline bool theme_mono_is_inited() noexcept {
     return lv_theme_mono_is_inited();
 }
 
-/// Deinitialize mono theme
+/// Deinitialize mono theme (LVGL 9.x only)
 inline void theme_mono_deinit() noexcept {
     lv_theme_mono_deinit();
 }
+#endif // LV_VERSION_AT_LEAST(9, 0, 0)
 
 #endif // LV_USE_THEME_MONO
 

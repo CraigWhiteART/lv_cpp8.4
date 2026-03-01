@@ -19,7 +19,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Keyboard : public ObjectView,
+class LV_EMPTY_BASES Keyboard : public ObjectView,
             public ObjectMixin<Keyboard>,
                  public EventMixin<Keyboard>,
                  public StyleMixin<Keyboard> {

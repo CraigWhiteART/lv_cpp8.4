@@ -3,9 +3,16 @@
 /**
  * @file draw_buf.hpp
  * @brief RAII wrapper for LVGL draw buffers
+ *
+ * @note The draw buffer system (lv_draw_buf_t) is only available in LVGL 9.x.
+ * This entire header is guarded for LVGL 9.x only.
  */
 
 #include <lvgl.h>
+#include "../core/version.hpp"
+
+#if LV_VERSION_AT_LEAST(9, 0, 0)
+
 #include <utility>
 #include "../core/wrap.hpp"
 
@@ -324,3 +331,5 @@ inline void buf_handlers_init(lv_draw_buf_handlers_t* handlers,
 } // namespace draw
 
 } // namespace lv
+
+#endif /* LV_VERSION_AT_LEAST(9, 0, 0) */

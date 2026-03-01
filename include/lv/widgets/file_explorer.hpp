@@ -52,7 +52,7 @@ namespace explorer_dir {
  *       const char* file = fe.selected_file();
  *   });
  */
-class FileExplorer : public ObjectView,
+class LV_EMPTY_BASES FileExplorer : public ObjectView,
                      public ObjectMixin<FileExplorer>,
                      public EventMixin<FileExplorer>,
                      public StyleMixin<FileExplorer> {

@@ -6,6 +6,7 @@
  */
 
 #include <lvgl.h>
+#include "../core/version.hpp"
 #include "../core/object.hpp"
 #include "../core/event.hpp"
 #include "../core/style.hpp"
@@ -19,7 +20,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Image : public ObjectView,
+class LV_EMPTY_BASES Image : public ObjectView,
             public ObjectMixin<Image>,
               public EventMixin<Image>,
               public StyleMixin<Image> {
@@ -55,10 +56,16 @@ public:
         return *this;
     }
 
+    /// Alias for rotation() - LVGL 8.x style API
+    Image& angle(int32_t a) noexcept { return rotation(a); }
+
     /// Get rotation angle
     [[nodiscard]] int32_t rotation() const noexcept {
         return lv_image_get_rotation(m_obj);
     }
+
+    /// Alias for rotation() - LVGL 8.x style API
+    [[nodiscard]] int32_t angle() const noexcept { return rotation(); }
 
     /// Set scale (256 = 100%, 512 = 200%, etc.)
     Image& scale(int32_t zoom) noexcept {
@@ -66,11 +73,17 @@ public:
         return *this;
     }
 
+    /// Alias for scale() - LVGL 8.x style API
+    Image& zoom(int32_t z) noexcept { return scale(z); }
+
     /// Set scale X
     Image& scale_x(int32_t zoom) noexcept {
         lv_image_set_scale_x(m_obj, zoom);
         return *this;
     }
+
+    /// Alias for scale_x() - LVGL 8.x style API
+    Image& zoom_x(int32_t z) noexcept { return scale_x(z); }
 
     /// Set scale Y
     Image& scale_y(int32_t zoom) noexcept {
@@ -78,10 +91,16 @@ public:
         return *this;
     }
 
+    /// Alias for scale_y() - LVGL 8.x style API
+    Image& zoom_y(int32_t z) noexcept { return scale_y(z); }
+
     /// Get scale
     [[nodiscard]] int32_t scale() const noexcept {
         return lv_image_get_scale(m_obj);
     }
+
+    /// Alias for scale() - LVGL 8.x style API
+    [[nodiscard]] int32_t zoom() const noexcept { return scale(); }
 
     /// Set pivot point for rotation/scaling
     Image& pivot(int32_t x, int32_t y) noexcept {
@@ -126,11 +145,13 @@ public:
         return lv_image_get_antialias(m_obj);
     }
 
-    /// Set inner alignment
+#if LV_VERSION_AT_LEAST(9, 0, 0)
+    /// Set inner alignment (LVGL 9.0+)
     Image& inner_align(lv_image_align_t align) noexcept {
         lv_image_set_inner_align(m_obj, align);
         return *this;
     }
+#endif
 
     // ==================== Size ====================
 
@@ -160,18 +181,20 @@ public:
         return *this;
     }
 
+#if LV_VERSION_AT_LEAST(9, 0, 0)
     // ==================== Blend Mode ====================
 
-    /// Set blend mode
+    /// Set blend mode (LVGL 9.0+)
     Image& blend_mode(lv_blend_mode_t mode) noexcept {
         lv_image_set_blend_mode(m_obj, mode);
         return *this;
     }
 
-    /// Get blend mode
+    /// Get blend mode (LVGL 9.0+)
     [[nodiscard]] lv_blend_mode_t blend_mode() const noexcept {
         return lv_image_get_blend_mode(m_obj);
     }
+#endif
 
 };
 

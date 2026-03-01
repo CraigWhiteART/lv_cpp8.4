@@ -19,7 +19,7 @@ namespace lv {
  *
  * Size: sizeof(void*) - 4 or 8 bytes
  */
-class Calendar : public ObjectView,
+class LV_EMPTY_BASES Calendar : public ObjectView,
             public ObjectMixin<Calendar>,
                  public EventMixin<Calendar>,
                  public StyleMixin<Calendar> {

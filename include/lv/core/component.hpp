@@ -10,6 +10,7 @@
 
 #include <lvgl.h>
 #include "object.hpp"
+#include "version.hpp"
 
 namespace lv {
 
@@ -66,7 +67,7 @@ namespace lv {
  * @tparam Derived The derived component class (CRTP pattern)
  */
 template<typename Derived>
-class Component {
+class LV_EMPTY_BASES Component {
 protected:
     lv_obj_t* m_root = nullptr;
 
@@ -89,15 +90,30 @@ private:
 
     static void rebind_root_delete_hook(lv_obj_t* root, Derived* old_owner,
                                         Derived* new_owner) noexcept {
+        // lv_obj_remove_event_cb_with_user_data is available in both LVGL 8.x and 9.x
         lv_obj_remove_event_cb_with_user_data(root, &Component::root_delete_cb, old_owner);
         attach_root_delete_hook(root, new_owner);
+
+#if !LV_VERSION_AT_LEAST(9, 0, 0)
+        // LVGL 8.x: Update user_data to point to new owner
+        // This is needed because owner_from_obj() uses user_data on 8.x
+        lv_obj_set_user_data(root, static_cast<void*>(new_owner));
+#endif
     }
 
     /// Scan event descriptors on obj for root_delete_cb; return owning Derived*.
     /// The callback address &Component::root_delete_cb is unique per Derived type,
     /// so this is type-safe. Uses only public, stable LVGL APIs.
+    ///
+    /// Implementation:
+    /// - LVGL 9.x: Scans event descriptors to find root_delete_cb, extracting
+    ///   component pointer from event user_data (avoids lv_obj_t::user_data)
+    /// - LVGL 8.x: Falls back to lv_obj_get_user_data() (requires LV_USE_USER_DATA == 1)
     static Derived* owner_from_obj(lv_obj_t* obj) noexcept {
         if (!obj) return nullptr;
+
+#if LV_VERSION_AT_LEAST(9, 0, 0)
+        // LVGL 9.x: Event descriptor scanning
         const uint32_t n = lv_obj_get_event_count(obj);
         for (uint32_t i = 0; i < n; ++i) {
             lv_event_dsc_t* d = lv_obj_get_event_dsc(obj, i);
@@ -107,6 +123,14 @@ private:
             }
         }
         return nullptr;
+#else
+        // LVGL 8.x: user_data fallback
+        // Requires LV_USE_USER_DATA == 1 in lv_conf.h
+        #if !defined(LV_USE_USER_DATA) || LV_USE_USER_DATA != 1
+            #error "Component system requires LV_USE_USER_DATA == 1 for ownership lookup on LVGL 8.x"
+        #endif
+        return static_cast<Derived*>(lv_obj_get_user_data(obj));
+#endif
     }
 
 public:
@@ -153,7 +177,11 @@ public:
      *
      * Calls the derived class's build() method and stores the result.
      * A delete-event hook is registered on the root to track external deletion.
-     * The root's user_data is not touched — it remains available for application use.
+     *
+     * @note LVGL 9.x: The root's user_data is not touched — it remains available
+     *       for application use.
+     * @note LVGL 8.x: The root's user_data is used to store the component pointer
+     *       for owner lookup. Application code should not use user_data on 8.x.
      *
      * @param parent The parent object (ObjectView)
      */
@@ -168,6 +196,12 @@ public:
 
         if (m_root) {
             attach_root_delete_hook(m_root, static_cast<Derived*>(this));
+
+#if !LV_VERSION_AT_LEAST(9, 0, 0)
+            // LVGL 8.x: Store component pointer in user_data for lookup fallback
+            // This occupies user_data - application code should not use it on 8.x
+            lv_obj_set_user_data(m_root, static_cast<void*>(static_cast<Derived*>(this)));
+#endif
 
             // Call optional lifecycle hook
             if constexpr (requires { static_cast<Derived*>(this)->on_mount(); }) {
@@ -191,6 +225,10 @@ public:
             }
 
             if (m_root) {
+#if !LV_VERSION_AT_LEAST(9, 0, 0)
+                // LVGL 8.x: Clear user_data before deletion
+                lv_obj_set_user_data(m_root, nullptr);
+#endif
                 lv_obj_delete(m_root);
                 m_root = nullptr;
             }
@@ -300,10 +338,10 @@ namespace detail {
  *
  * Destruction order:
  *   ~ScreenComponent calls unmount() (fires on_unmount, deletes m_root),
- *   then deletes m_screen. ~Component runs unmount() again (m_root==nullptr, no-op).
+ * then deletes m_screen. ~Component runs unmount() again (m_root==nullptr, no-op).
  */
 template<typename Derived>
-class ScreenComponent : public Component<Derived> {
+class LV_EMPTY_BASES ScreenComponent : public Component<Derived> {
     lv_obj_t* m_screen = nullptr;
 
     static void screen_delete_cb(lv_event_t* e) noexcept {
@@ -364,13 +402,15 @@ public:
     }
 
     /**
-     * @brief Mount and load with animation
+     * @brief Mount and load with animation (LVGL 9.x only)
      */
+#if LV_VERSION_AT_LEAST(9, 0, 0)
     void mount_and_load_anim(lv_screen_load_anim_t anim, uint32_t time,
                               uint32_t delay = 0, bool auto_del = true) {
         ObjectView screen = mount_screen();
         lv_screen_load_anim(screen, anim, time, delay, auto_del);
     }
+#endif
 
     /// Get the screen object
     [[nodiscard]] ObjectView screen() const noexcept {
