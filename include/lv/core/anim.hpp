@@ -509,7 +509,7 @@ inline void anim_delete(ObjectView obj, lv_anim_exec_xcb_t exec_cb) {
 #endif
 
 /// Get running animation on object
-inline lv_anim_t* anim_get(ObjectView obj, lv_anim_exec_xcb_t exec_cb) {
+[[nodiscard]] inline lv_anim_t* anim_get(ObjectView obj, lv_anim_exec_xcb_t exec_cb) {
     return lv_anim_get(obj.get(), exec_cb);
 }
 

@@ -96,4 +96,21 @@ inline void user(Fmt fmt, Args... args) noexcept {
 
 } // namespace lv::log
 
+#else // !LV_USE_LOG
+
+namespace lv::log {
+
+template<typename... Args>
+inline void trace(const char*, Args...) noexcept {}
+template<typename... Args>
+inline void info(const char*, Args...) noexcept {}
+template<typename... Args>
+inline void warn(const char*, Args...) noexcept {}
+template<typename... Args>
+inline void error(const char*, Args...) noexcept {}
+template<typename... Args>
+inline void user(const char*, Args...) noexcept {}
+
+} // namespace lv::log
+
 #endif // LV_USE_LOG

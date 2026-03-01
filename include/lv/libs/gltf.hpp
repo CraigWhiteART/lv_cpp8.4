@@ -88,7 +88,7 @@ public:
      * @param path File path to .gltf or .glb file
      * @return Pointer to loaded model, or nullptr on failure
      */
-    lv_gltf_model_t* load_model(const char* path) noexcept {
+    [[nodiscard]] lv_gltf_model_t* load_model(const char* path) noexcept {
         return lv_gltf_load_model_from_file(m_obj, path);
     }
 

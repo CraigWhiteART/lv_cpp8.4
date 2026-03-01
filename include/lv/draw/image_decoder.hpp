@@ -115,7 +115,7 @@ public:
      * @param args Optional decode arguments (nullptr for defaults)
      * @return true if successfully opened
      */
-    bool open(const void* src, const lv_image_decoder_args_t* args = nullptr) noexcept {
+    [[nodiscard]] bool open(const void* src, const lv_image_decoder_args_t* args = nullptr) noexcept {
         close();  // Close any previous session
         lv_result_t res = lv_image_decoder_open(&m_dsc, src, args);
         m_open = (res == LV_RESULT_OK);
@@ -130,7 +130,7 @@ public:
      * @param no_cache Bypass image cache
      * @return true if successfully opened
      */
-    bool open(const void* src, bool premultiply, bool no_cache = false) noexcept {
+    [[nodiscard]] bool open(const void* src, bool premultiply, bool no_cache = false) noexcept {
         lv_image_decoder_args_t args{};
         args.premultiply = premultiply;
         args.no_cache = no_cache;
@@ -144,7 +144,7 @@ public:
      * @param decoded_area Input/output: set to LV_COORD_MIN initially, returns decoded area
      * @return LV_RESULT_OK if more data available, LV_RESULT_INVALID when done
      */
-    lv_result_t get_area(const lv_area_t& full_area, lv_area_t& decoded_area) noexcept {
+    [[nodiscard]] lv_result_t get_area(const lv_area_t& full_area, lv_area_t& decoded_area) noexcept {
         return lv_image_decoder_get_area(&m_dsc, &full_area, &decoded_area);
     }
 
@@ -269,7 +269,7 @@ public:
     // ==================== Lifecycle ====================
 
     /// Create the decoder
-    bool create() noexcept {
+    [[nodiscard]] bool create() noexcept {
         destroy();
         m_decoder = lv_image_decoder_create();
         return m_decoder != nullptr;

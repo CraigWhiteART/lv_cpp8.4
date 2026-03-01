@@ -219,13 +219,15 @@ private:
 
         for (const char* const* path = font_paths; *path; ++path) {
             if (m_main_font.load_from_file(*path, 14)) {
-                LV_LOG_USER("Loaded font: %s", *path);
-                m_title_font.load_from_file(*path, 20);
+                lv::log::user("Loaded font: %s", *path);
+                if (!m_title_font.load_from_file(*path, 20)) {
+                    lv::log::warn("Title font failed to load: %s", *path);
+                }
                 return;
             }
         }
 
-        LV_LOG_WARN("TTF font not found. Place DejaVuSans.ttf in ./fonts/");
+        lv::log::warn("TTF font not found. Place DejaVuSans.ttf in ./fonts/");
     }
 
     void on_language_changed() {

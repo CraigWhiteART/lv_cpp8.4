@@ -118,7 +118,7 @@ public:
      * @param len Length in bytes
      * @return true if successful
      */
-    bool update(const void* data, uint32_t len) noexcept {
+    [[nodiscard]] bool update(const void* data, uint32_t len) noexcept {
         return lv_qrcode_update(m_obj, data, len) == LV_RESULT_OK;
     }
 };

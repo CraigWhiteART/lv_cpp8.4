@@ -469,12 +469,12 @@ public:
     // ==================== Removal ====================
 
     /// Remove callback descriptor by index
-    bool remove_event(uint32_t index) noexcept {
+    [[nodiscard]] bool remove_event(uint32_t index) noexcept {
         return lv_obj_remove_event(obj(), index);
     }
 
     /// Remove a specific event descriptor
-    bool remove_event_dsc(lv_event_dsc_t* dsc) noexcept {
+    [[nodiscard]] bool remove_event_dsc(lv_event_dsc_t* dsc) noexcept {
         return lv_obj_remove_event_dsc(obj(), dsc);
     }
 

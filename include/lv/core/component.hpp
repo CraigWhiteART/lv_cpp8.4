@@ -109,7 +109,7 @@ private:
     /// - LVGL 9.x: Scans event descriptors to find root_delete_cb, extracting
     ///   component pointer from event user_data (avoids lv_obj_t::user_data)
     /// - LVGL 8.x: Falls back to lv_obj_get_user_data() (requires LV_USE_USER_DATA == 1)
-    static Derived* owner_from_obj(lv_obj_t* obj) noexcept {
+    [[nodiscard]] static Derived* owner_from_obj(lv_obj_t* obj) noexcept {
         if (!obj) return nullptr;
 
 #if LV_VERSION_AT_LEAST(9, 0, 0)

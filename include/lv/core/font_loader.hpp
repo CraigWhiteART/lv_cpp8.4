@@ -153,7 +153,7 @@ public:
     }
 
     /// Release ownership (font won't be deleted in destructor)
-    lv_font_t* release() noexcept {
+    [[nodiscard]] lv_font_t* release() noexcept {
         m_owned = false;
         return m_font;
     }
@@ -255,7 +255,7 @@ public:
     }
 
     /// Release ownership (font won't be deleted in destructor)
-    lv_font_t* release() noexcept {
+    [[nodiscard]] lv_font_t* release() noexcept {
         m_owned = false;
         return m_font;
     }
@@ -304,7 +304,7 @@ public:
      * @param size Font size in pixels
      */
     DynamicFont(const char* path, int32_t size) noexcept {
-        load_from_file(path, size);
+        [[maybe_unused]] bool ok = load_from_file(path, size);
     }
 
     /**
@@ -317,7 +317,7 @@ public:
      * @param size Font size in pixels
      */
     DynamicFont(const void* data, size_t data_size, int32_t size) noexcept {
-        load_from_memory(data, data_size, size);
+        [[maybe_unused]] bool ok = load_from_memory(data, data_size, size);
     }
 
     ~DynamicFont() { destroy(); }
@@ -348,7 +348,7 @@ public:
      * @brief Load font from file
      * @return true on success
      */
-    bool load_from_file([[maybe_unused]] const char* path, [[maybe_unused]] int32_t size) noexcept {
+    [[nodiscard]] bool load_from_file([[maybe_unused]] const char* path, [[maybe_unused]] int32_t size) noexcept {
         destroy();
 
 #if LV_USE_FREETYPE
@@ -375,7 +375,7 @@ public:
      * @brief Load font from memory
      * @return true on success
      */
-    bool load_from_memory([[maybe_unused]] const void* data,
+    [[nodiscard]] bool load_from_memory([[maybe_unused]] const void* data,
                           [[maybe_unused]] size_t data_size,
                           [[maybe_unused]] int32_t size) noexcept {
         destroy();
@@ -428,7 +428,7 @@ public:
     [[nodiscard]] Backend backend() const noexcept { return m_backend; }
 
     /// Change font size (TinyTTF only)
-    bool set_size([[maybe_unused]] int32_t size) noexcept {
+    [[nodiscard]] bool set_size([[maybe_unused]] int32_t size) noexcept {
 #if LV_USE_TINY_TTF
         if (m_font && m_backend == Backend::TinyTTF) {
             lv_tiny_ttf_set_size(m_font, size);
@@ -439,7 +439,7 @@ public:
     }
 
     /// Release ownership (font won't be deleted in destructor)
-    lv_font_t* release() noexcept {
+    [[nodiscard]] lv_font_t* release() noexcept {
         lv_font_t* font = m_font;
         m_font = nullptr;
         m_backend = Backend::None;
@@ -501,18 +501,18 @@ public:
     explicit operator bool() const noexcept { return valid(); }
 
     /// Add a font path for lookup
-    bool add_path(const char* path) noexcept {
+    [[nodiscard]] bool add_path(const char* path) noexcept {
         return m_mgr && lv_font_manager_add_path(m_mgr, path);
     }
 
     /// Create a font from the manager
-    lv_font_t* create_font(const char* name, uint32_t size, uint32_t style = 0) noexcept {
+    [[nodiscard]] lv_font_t* create_font(const char* name, uint32_t size, uint32_t style = 0) noexcept {
         if (!m_mgr) return nullptr;
         return lv_font_manager_create_font(m_mgr, name, size, style);
     }
 
     /// Delete a font created by this manager
-    bool delete_font(lv_font_t* font) noexcept {
+    [[nodiscard]] bool delete_font(lv_font_t* font) noexcept {
         return m_mgr && lv_font_manager_delete_font(m_mgr, font);
     }
 };
