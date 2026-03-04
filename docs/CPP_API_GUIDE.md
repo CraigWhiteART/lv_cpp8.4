@@ -2,6 +2,8 @@
 
 This guide explains the C++ wrapper API for LVGL and how it differs from the C API.
 
+> **Version Compatibility:** This C++20 wrapper supports both **LVGL 8.3/8.4** and **LVGL 9.4/9.5** APIs. The same C++ API works across all supported LVGL versions.
+
 ## Table of Contents
 
 1. [Philosophy](#philosophy)

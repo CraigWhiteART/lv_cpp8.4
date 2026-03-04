@@ -4,6 +4,8 @@
 
 This library provides **zero-cost C++20 abstractions** over LVGL's C API, enabling modern, type-safe, declarative UI development while maintaining full compatibility with LVGL's retained-mode widget system.
 
+**Version Support:** This C++ wrapper supports both **LVGL 8.3/8.4** and **LVGL 9.4/9.5**, maintaining a zero-overhead design across all supported versions. The project structure includes `lvgl_8.4/` and `lvgl_9.4/` directories for version-specific configurations.
+
 The design philosophy is: **C++ is the only UI language** - no DSL, no XML, no code generation, no moc. Just pure C++20 with CMake.
 
 ---

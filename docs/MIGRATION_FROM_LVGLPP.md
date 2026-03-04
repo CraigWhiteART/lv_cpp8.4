@@ -5,7 +5,8 @@ This guide is for projects moving from the old `lvglpp` wrapper (in `../lvglpp`)
 ## Scope
 
 - `lvglpp` was written around LVGL 8.3-era APIs and ownership patterns.
-- `lv` is designed around LVGL 9 APIs, zero-cost views, and fluent chaining.
+- `lv` is designed around **LVGL 9.4/9.5** APIs, zero-cost views, and fluent chaining.
+- **This wrapper also supports LVGL 8.3/8.4** for backward compatibility, enabling migration at your own pace.
 - This is not a drop-in replacement. Expect mechanical API edits.
 
 ## Core Mental Model Changes
@@ -138,7 +139,7 @@ Some `lvglpp` wrappers may not exist yet in `lv` under the same name or shape (f
 
 ## Recommended Migration Plan
 
-1. First compile your project on LVGL 9 C API names.
+1. First compile your project on LVGL 9.4/9.5 C API names (or continue using 8.3/8.4 if not ready to upgrade).
 2. Switch includes to `lv` and replace constructors with `::create(...)`.
 3. Convert high-frequency calls (`set_*` -> fluent API).
 4. Migrate events to `on...` APIs.
@@ -150,4 +151,4 @@ Some `lvglpp` wrappers may not exist yet in `lv` under the same name or shape (f
 - Assuming every old class name exists unchanged.
 - Expecting constructor-based widget creation.
 - Forgetting `LV_USE_*` dependency chains in LVGL itself (some widgets require others).
-- Mixing old LVGL v8 enum/function names with LVGL v9 APIs.
+- Mixing old LVGL 8.3/8.4 enum/function names with LVGL 9.4/9.5 APIs.

@@ -2,6 +2,8 @@
 
 Zero-cost, type-safe C++20 wrapper for the [LVGL](https://lvgl.io) embedded graphics library.
 
+**Version Support:** This C++ wrapper supports both **LVGL 8.3/8.4** and **LVGL 9.4/9.5**, maintaining a zero-overhead design across all supported versions.
+
 ## Quick Start
 
 ```cpp
@@ -69,8 +71,9 @@ private:
 Place LVGL as a sibling directory:
 ```
 parent/
-├── lvgl/          # LVGL 9.4 source (git clone -b release/v9.4 https://github.com/lvgl/lvgl)
-└── lv/            # This project
+├── lvgl_8.4/      # LVGL 8.4 source (optional, for 8.x support)
+├── lvgl_9.4/      # LVGL 9.4 source (git clone -b release/v9.4 https://github.com/lvgl/lvgl)
+└── lv_cpp8.4/     # This project
 ```
 
 Or specify a custom path with `-DLVGL_DIR`.
@@ -93,7 +96,7 @@ cmake -B build -DLVGL_DIR=/path/to/lvgl
 
 - C++20 compiler (GCC 11+, Clang 14+, MSVC 2022+)
 - CMake 3.20+
-- LVGL 9.4
+- LVGL 8.3/8.4 or LVGL 9.4/9.5
 - X11 or SDL2 (for display backend in examples/demos)
 
 ## Documentation
