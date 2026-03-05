@@ -14,8 +14,11 @@ This guide explains the C++ wrapper API for LVGL and how it differs from the C A
 6. [Animations](#animations)
 7. [Events](#events)
 8. [Object Wrapping](#object-wrapping)
-9. [Common Patterns](#common-patterns)
-10. [UI Automation](#ui-automation)
+9. [Important Compatibility Notes (Current Wrapper)](#important-compatibility-notes-current-wrapper)
+10. [Common Patterns](#common-patterns)
+11. [UI Automation](#ui-automation)
+12. [Constants](#constants)
+13. [Quick Reference](#quick-reference)
 
 ---
 
@@ -81,8 +84,8 @@ auto arc = lv::Arc::create(parent)
     .value(75)
     .size(150, 150)
     .remove_style(nullptr, lv::kPart::knob)
-    .arc_width(10, lv::kPart::main)
-    .arc_width(10, lv::kPart::indicator);
+    .arc_width(10)          // main arc
+    .indicator_width(10);   // indicator arc
 ```
 
 ---
@@ -376,15 +379,58 @@ lv_obj_t* raw = btn.get();  // Get underlying lv_obj_t*
 
 ```cpp
 void style_any_widget(lv::ObjectView obj) {
-    obj.size(100, 100)
-       .center()
-       .bg_color(lv::rgb(0x333333));
+    // ObjectView exposes set_*_if helpers and getters.
+    // It does NOT include full fluent mixins (size/bg_color/add_event_cb/etc).
+    obj.set_size_if(100, 100)
+       .set_align_if(LV_ALIGN_CENTER, 0, 0)
+       .set_bg_color_if(lv::rgb(0x333333));
 }
 
 // Works with any widget type
 style_any_widget(button);
 style_any_widget(arc);
 style_any_widget(label);
+```
+
+To use full fluent APIs (`size`, `bg_color`, `add_event_cb`, `add_flag`, ...), wrap with a concrete widget type:
+
+```cpp
+lv::Box(lv::wrap, raw_obj)
+    .size(120, 60)
+    .bg_color(lv::rgb(0x202020))
+    .add_flag(LV_OBJ_FLAG_HIDDEN);
+```
+
+---
+
+## Important Compatibility Notes (Current Wrapper)
+
+These are common gotchas in this repository's `lv_cpp` version.
+
+| Pattern | Works? | Use Instead |
+|---|---|---|
+| `lv::ObjectView(obj).add_flag(...)` | ❌ | Use concrete wrapper (`lv::Box/Label/Button/...`) or C API `lv_obj_add_flag` |
+| `lv::ObjectView(obj).add_event_cb(...)` | ❌ | Use widget wrappers with `EventMixin` (`btn.add_event_cb(...)`, `btn.on(...)`) |
+| `lv::ObjectView(obj).set_size(...)` / `.set_align(...)` | ❌ | `set_size_if(...)` / `set_align_if(...)` or C API |
+| `lv::Box(...).del()` / `lv::ObjectView(...).del()` | ❌ | Use `lv_obj_del(raw_obj)` |
+| `lv::Switch(...).has_state(LV_STATE_CHECKED)` | ❌ | `switch.is_on()` or `lv_obj_has_state(...)` |
+| `lv::Arc::arc_width(width, part)` | ❌ | `arc_width(width)` / `indicator_width(width)` or C API per-part style setter |
+| `lv::Box(...).pad_gap(...)` | ❌ | Use `gap(g, sel)` (sets both row+column) |
+| `lv::Box(...).anim_time(ms, sel)` | ✅ | Preferred over `lv_obj_set_style_anim_time(obj, ms, sel)` |
+| `lv::Box(...).shadow_spread(px, sel)` | ✅ | Preferred over `lv_obj_set_style_shadow_spread(obj, px, sel)` |
+| `lv::Image(...).image_opa(opa, sel)` | ✅ | Selector overload available for state/part style writes |
+| `lv::Image(...).recolor_opa(opa, sel)` | ✅ | Selector overload available for state/part style writes |
+| `lv::Screen(scr)` to wrap existing screen | ❌ | `lv::Screen(lv::wrap, scr)` |
+| `lv::Label(...).get_style_text_font(...)` | ❌ | `lv_obj_get_style_text_font(label, selector)` |
+
+### Screen Wrapping Example
+
+```cpp
+lv_obj_t* scr = lv_scr_act();
+
+lv::Screen(lv::wrap, scr)
+    .bg_color(lv::rgb(0x101018))
+    .clear_flag(LV_OBJ_FLAG_SCROLLABLE);
 ```
 
 ---
@@ -414,11 +460,11 @@ auto gauge = lv::Arc::create(parent)
     .rotation(135)
     .bg_angles(0, 270)
     .value(75)
-    .arc_width(15, lv::kPart::main)
-    .arc_width(15, lv::kPart::indicator)
-    .arc_color(lv::rgb(0x333333), lv::kPart::main)
-    .arc_color(lv::rgb(0x00FF00), lv::kPart::indicator)
-    .arc_rounded(true);
+    .arc_width(15)
+    .indicator_width(15)
+    .arc_color(lv::rgb(0x333333))
+    .indicator_color(lv::rgb(0x00FF00))
+    .indicator_rounded(true);
 ```
 
 ### Animated Value Change
@@ -662,7 +708,9 @@ lv::Box::create(parent)        // Generic container
 .y(y)                 // Set Y position
 .center()             // Center in parent
 .align(align, x, y)   // Align with offset
-.hidden(bool)         // Show/hide
+.visible(bool)        // Show/hide
+.show()               // Show
+.hide()               // Hide
 .clickable(bool)      // Enable/disable clicks
 .scrollable(bool)     // Enable/disable scrolling
 .get()                // Get raw lv_obj_t*

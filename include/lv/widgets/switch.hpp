@@ -65,8 +65,9 @@ public:
         return on(!is_on());
     }
 
-    // ==================== Orientation ====================
+    // ==================== Orientation (LVGL 9.x only) ====================
 
+#if LV_VERSION_AT_LEAST(9, 0, 0)
     /// Set switch orientation
     Switch& orientation(lv_switch_orientation_t orient) noexcept {
         lv_switch_set_orientation(m_obj, orient);
@@ -92,6 +93,7 @@ public:
     [[nodiscard]] lv_switch_orientation_t get_orientation() const noexcept {
         return lv_switch_get_orientation(m_obj);
     }
+#endif
 
     /// Disable the switch
     Switch& disabled(bool value = true) noexcept {

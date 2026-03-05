@@ -175,9 +175,21 @@ public:
         return *this;
     }
 
+    /// Set recolor opacity for a specific part/state selector
+    Image& recolor_opa(lv_opa_t opa, lv_style_selector_t sel) noexcept {
+        lv_obj_set_style_image_recolor_opa(m_obj, opa, sel);
+        return *this;
+    }
+
     /// Set image opacity
     Image& image_opa(lv_opa_t opa) noexcept {
         lv_obj_set_style_image_opa(m_obj, opa, 0);
+        return *this;
+    }
+
+    /// Set image opacity for a specific part/state selector
+    Image& image_opa(lv_opa_t opa, lv_style_selector_t sel) noexcept {
+        lv_obj_set_style_image_opa(m_obj, opa, sel);
         return *this;
     }
 

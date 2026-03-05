@@ -18,6 +18,7 @@ namespace lv {
 /**
  * @brief RAII wrapper for lv_style_t
  *
+```
  * Manages style lifecycle with automatic init/reset.
  * The style can be shared across multiple objects (LVGL copies pointer, not data).
  *
@@ -606,10 +607,38 @@ public:
         return *static_cast<Derived*>(this);
     }
 
+    Derived& outline_width(int32_t width, lv_style_selector_t sel = 0) noexcept {
+        lv_obj_set_style_outline_width(obj(), width, sel);
+        return *static_cast<Derived*>(this);
+    }
+
     // ==================== Padding ====================
 
     Derived& padding(int32_t pad, lv_style_selector_t sel = 0) noexcept {
         lv_obj_set_style_pad_all(obj(), pad, sel);
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set padding on all sides (alias for padding)
+    Derived& pad_all(int32_t pad, lv_style_selector_t sel = 0) noexcept {
+        lv_obj_set_style_pad_top(obj(), pad, sel);
+        lv_obj_set_style_pad_bottom(obj(), pad, sel);
+        lv_obj_set_style_pad_left(obj(), pad, sel);
+        lv_obj_set_style_pad_right(obj(), pad, sel);
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set horizontal padding (left and right)
+    Derived& pad_hor(int32_t pad, lv_style_selector_t sel = 0) noexcept {
+        lv_obj_set_style_pad_left(obj(), pad, sel);
+        lv_obj_set_style_pad_right(obj(), pad, sel);
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set vertical padding (top and bottom)
+    Derived& pad_ver(int32_t pad, lv_style_selector_t sel = 0) noexcept {
+        lv_obj_set_style_pad_top(obj(), pad, sel);
+        lv_obj_set_style_pad_bottom(obj(), pad, sel);
         return *static_cast<Derived*>(this);
     }
 
@@ -698,6 +727,12 @@ public:
 
     Derived& text_line_space(int32_t space, lv_style_selector_t sel = 0) noexcept {
         lv_obj_set_style_text_line_space(obj(), space, sel);
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set text opacity
+    Derived& text_opa(lv_opa_t opa, lv_style_selector_t sel = 0) noexcept {
+        lv_obj_set_style_text_opa(obj(), opa, sel);
         return *static_cast<Derived*>(this);
     }
 
@@ -822,6 +857,32 @@ public:
         return *static_cast<Derived*>(this);
     }
 
+    // ==================== Shadow ====================
+
+    /// Set shadow width
+    Derived& shadow_width(int32_t width, lv_style_selector_t sel = 0) noexcept {
+        lv_obj_set_style_shadow_width(obj(), width, sel);
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set shadow spread
+    Derived& shadow_spread(int32_t spread, lv_style_selector_t sel = 0) noexcept {
+        lv_obj_set_style_shadow_spread(obj(), spread, sel);
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set shadow color
+    Derived& shadow_color(lv_color_t color, lv_style_selector_t sel = 0) noexcept {
+        lv_obj_set_style_shadow_color(obj(), color, sel);
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set shadow opacity
+    Derived& shadow_opa(lv_opa_t opa, lv_style_selector_t sel = 0) noexcept {
+        lv_obj_set_style_shadow_opa(obj(), opa, sel);
+        return *static_cast<Derived*>(this);
+    }
+
     // ==================== Size Constraints ====================
 
     Derived& min_width(int32_t w, lv_style_selector_t sel = 0) noexcept {
@@ -893,6 +954,12 @@ public:
         return *static_cast<Derived*>(this);
     }
 
+    /// Set animation time (LVGL 8.x convenience alias)
+    Derived& anim_time(uint32_t time, lv_style_selector_t sel = 0) noexcept {
+        lv_obj_set_style_anim_time(obj(), time, sel);
+        return *static_cast<Derived*>(this);
+    }
+
 #if LV_USE_FLEX
     // ==================== Flex Layout Style ====================
 
@@ -961,6 +1028,147 @@ public:
     [[nodiscard]] lv_opa_t get_style_opa(lv_part_t part = LV_PART_MAIN) const noexcept {
         return lv_obj_get_style_opa(obj(), part);
     }
+
+    /// Get text opacity
+    [[nodiscard]] lv_opa_t get_style_text_opa(lv_part_t part = LV_PART_MAIN) const noexcept {
+        return lv_obj_get_style_text_opa(obj(), part);
+    }
+
+    /// Get text color
+    [[nodiscard]] lv_color_t get_style_text_color(lv_part_t part = LV_PART_MAIN) const noexcept {
+        return lv_obj_get_style_text_color(obj(), part);
+    }
+
+    /// Get border width
+    [[nodiscard]] int32_t get_style_border_width(lv_part_t part = LV_PART_MAIN) const noexcept {
+        return lv_obj_get_style_border_width(obj(), part);
+    }
+    
+    /// Get outline width
+    [[nodiscard]] int32_t get_style_outline_width(lv_part_t part = LV_PART_MAIN) const noexcept {
+        return lv_obj_get_style_outline_width(obj(), part);
+    }
+
+    /// Set text color ONLY if changed
+    Derived& text_color_if(lv_color_t color, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_text_color(obj(), sel).full != color.full) {
+            lv_obj_set_style_text_color(obj(), color, sel);
+        }
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set font ONLY if changed
+    Derived& text_font_if(const lv_font_t* font, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_text_font(obj(), sel) != font) {
+            lv_obj_set_style_text_font(obj(), font, sel);
+        }
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set background color ONLY if changed
+    Derived& bg_color_if(lv_color_t color, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_bg_color(obj(), sel).full != color.full) {
+            lv_obj_set_style_bg_color(obj(), color, sel);
+        }
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set background opacity ONLY if changed
+    Derived& bg_opa_if(lv_opa_t opa, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_bg_opa(obj(), sel) != opa) {
+            lv_obj_set_style_bg_opa(obj(), opa, sel);
+        }
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set border width ONLY if changed
+    Derived& border_width_if(int32_t width, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_border_width(obj(), sel) != width) {
+            lv_obj_set_style_border_width(obj(), width, sel);
+        }
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set transform angle ONLY if changed
+    Derived& transform_angle_if(int16_t angle, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_transform_angle(obj(), sel) != angle) {
+            lv_obj_set_style_transform_angle(obj(), angle, sel);
+        }
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set transform zoom ONLY if changed
+    Derived& transform_zoom_if(int16_t zoom, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_transform_zoom(obj(), sel) != zoom) {
+            lv_obj_set_style_transform_zoom(obj(), zoom, sel);
+        }
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set opa ONLY if changed
+    Derived& opa_if(lv_opa_t opa, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_opa(obj(), sel) != opa) {
+            lv_obj_set_style_opa(obj(), opa, sel);
+        }
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set arc line color ONLY if changed
+    Derived& arc_color_if(lv_color_t color, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_arc_color(obj(), sel).full != color.full) {
+            lv_obj_set_style_arc_color(obj(), color, sel);
+        }
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set radius ONLY if changed
+    Derived& radius_if(int32_t radius, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_radius(obj(), sel) != radius) {
+            lv_obj_set_style_radius(obj(), radius, sel);
+        }
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set padding all ONLY if changed
+    Derived& pad_all_if(int32_t pad, lv_style_selector_t sel = 0) noexcept {
+#ifdef LVGL_VERSION_MAJOR
+#if LVGL_VERSION_MAJOR >= 8
+        if (lv_obj_get_style_pad_top(obj(), sel) != pad ||
+            lv_obj_get_style_pad_bottom(obj(), sel) != pad ||
+            lv_obj_get_style_pad_left(obj(), sel) != pad ||
+            lv_obj_get_style_pad_right(obj(), sel) != pad) {
+            lv_obj_set_style_pad_all(obj(), pad, sel);
+        }
+#endif
+#endif
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set text opacity ONLY if changed
+    Derived& text_opa_if(lv_opa_t opa, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_text_opa(obj(), sel) != opa) {
+            lv_obj_set_style_text_opa(obj(), opa, sel);
+        }
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set text align ONLY if changed
+    Derived& text_align_if(lv_text_align_t align, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_text_align(obj(), sel) != align) {
+            lv_obj_set_style_text_align(obj(), align, sel);
+        }
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set long mode ONLY if changed
+    Derived& long_mode_if(lv_label_long_mode_t mode, lv_style_selector_t sel = 0) noexcept {
+        // Label logic should ideally be in label.hpp but we need it here for fluent chaining in Mixin
+        if (lv_label_get_long_mode(obj()) != mode) {
+            lv_label_set_long_mode(obj(), mode);
+        }
+        return *static_cast<Derived*>(this);
+    }
+    
 };
 
 // Color helpers moved to core/color.hpp

@@ -47,8 +47,8 @@
 #include "core/version.hpp"
 #include "core/constants.hpp"
 #include "core/object.hpp"
-#include "core/event.hpp"
 #include "core/style.hpp"
+#include "core/event.hpp"
 #include "core/color.hpp"
 #include "core/font.hpp"
 #include "core/display.hpp"
@@ -150,9 +150,12 @@
 #if LV_USE_SPINBOX
 #include "widgets/spinbox.hpp"
 #endif
-#if LV_USE_KEYBOARD
+
+// Keyboard - LVGL 9.x only (uses lv_buttonmatrix_ctrl_t)
+#if LV_USE_KEYBOARD && LV_VERSION_AT_LEAST(9, 0, 0)
 #include "widgets/keyboard.hpp"
 #endif
+
 #if LV_USE_BUTTONMATRIX
 #include "widgets/buttonmatrix.hpp"
 #endif
@@ -167,9 +170,12 @@
 #if LV_USE_SPINNER
 #include "widgets/spinner.hpp"
 #endif
-#if LV_USE_CHART
+
+// Chart - LVGL 9.x only (significant API differences)
+#if LV_USE_CHART && LV_VERSION_AT_LEAST(9, 0, 0)
 #include "widgets/chart.hpp"
 #endif
+
 #if LV_USE_METER
 #include "widgets/meter.hpp"
 #endif
@@ -179,38 +185,56 @@
 #if LV_USE_SCALE
 #include "widgets/scale.hpp"
 #endif
-#if LV_USE_TABLE
+
+// Table - LVGL 9.x only (significant API differences)
+#if LV_USE_TABLE && LV_VERSION_AT_LEAST(9, 0, 0)
 #include "widgets/table.hpp"
 #endif
+
 #if LV_USE_CANVAS
 #include "widgets/canvas.hpp"
 #endif
 #if LV_USE_ANIMIMG
 #include "widgets/animimage.hpp"
 #endif
-#if LV_USE_SPAN
+
+// Span - LVGL 9.x only (significant API differences)
+#if LV_USE_SPAN && LV_VERSION_AT_LEAST(9, 0, 0)
 #include "widgets/span.hpp"
 #endif
 
 // Widgets - Containers
-#if LV_USE_LIST
+
+// List - LVGL 9.x only (API differences: lv_list_add_button vs lv_list_add_btn)
+#if LV_USE_LIST && LV_VERSION_AT_LEAST(9, 0, 0)
 #include "widgets/list.hpp"
 #endif
-#if LV_USE_MENU
+
+// Menu - LVGL 9.x only (significant API differences)
+#if LV_USE_MENU && LV_VERSION_AT_LEAST(9, 0, 0)
 #include "widgets/menu.hpp"
 #endif
-#if LV_USE_TABVIEW
+
+// Tabview - LVGL 9.x only (significant API differences)
+#if LV_USE_TABVIEW && LV_VERSION_AT_LEAST(9, 0, 0)
 #include "widgets/tabview.hpp"
 #endif
-#if LV_USE_TILEVIEW
+
+// Tileview - LVGL 9.x only (API differences)
+#if LV_USE_TILEVIEW && LV_VERSION_AT_LEAST(9, 0, 0)
 #include "widgets/tileview.hpp"
 #endif
-#if LV_USE_WIN
+
+// Win - LVGL 9.x only (API differences)
+#if LV_USE_WIN && LV_VERSION_AT_LEAST(9, 0, 0)
 #include "widgets/win.hpp"
 #endif
-#if LV_USE_MSGBOX
+
+// Msgbox - LVGL 9.x only (significant API differences)
+#if LV_USE_MSGBOX && LV_VERSION_AT_LEAST(9, 0, 0)
 #include "widgets/msgbox.hpp"
 #endif
+
 #if LV_USE_CALENDAR
 #include "widgets/calendar.hpp"
 #endif

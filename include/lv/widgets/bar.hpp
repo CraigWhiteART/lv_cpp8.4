@@ -114,8 +114,9 @@ public:
         return lv_bar_get_mode(m_obj);
     }
 
-    // ==================== Orientation ====================
+    // ==================== Orientation (LVGL 9.x only) ====================
 
+#if LV_VERSION_AT_LEAST(9, 0, 0)
     /// Set bar orientation
     Bar& orientation(lv_bar_orientation_t o) noexcept {
         lv_bar_set_orientation(m_obj, o);
@@ -131,6 +132,7 @@ public:
     Bar& vertical() noexcept {
         return orientation(LV_BAR_ORIENTATION_VERTICAL);
     }
+#endif
 
     // ==================== Size ====================
 

@@ -30,15 +30,15 @@ public:
     // ==================== Nested Types ====================
 
     /// Fractional unit for grid tracks (like CSS fr)
-    static constexpr int32_t fr(uint8_t x) noexcept {
+    static constexpr lv_coord_t fr(uint8_t x) noexcept {
         return LV_GRID_FR(x);
     }
 
     /// Content-sized track
-    static constexpr int32_t content = LV_GRID_CONTENT;
+    static constexpr lv_coord_t content = LV_GRID_CONTENT;
 
     /// Grid template terminator
-    static constexpr int32_t template_last = LV_GRID_TEMPLATE_LAST;
+    static constexpr lv_coord_t template_last = LV_GRID_TEMPLATE_LAST;
 
     /// Grid alignment constants
     struct Align {
@@ -67,19 +67,19 @@ public:
     // ==================== Grid Template ====================
 
     /// Set column and row descriptors (arrays must remain valid, end with LV_GRID_TEMPLATE_LAST)
-    Grid& dsc_array(const int32_t col_dsc[], const int32_t row_dsc[]) noexcept {
+    Grid& dsc_array(const lv_coord_t col_dsc[], const lv_coord_t row_dsc[]) noexcept {
         lv_obj_set_grid_dsc_array(m_obj, col_dsc, row_dsc);
         return *this;
     }
 
     /// Set column descriptor only
-    Grid& columns(const int32_t col_dsc[]) noexcept {
+    Grid& columns(const lv_coord_t col_dsc[]) noexcept {
         lv_obj_set_style_grid_column_dsc_array(m_obj, col_dsc, 0);
         return *this;
     }
 
     /// Set row descriptor only
-    Grid& rows(const int32_t row_dsc[]) noexcept {
+    Grid& rows(const lv_coord_t row_dsc[]) noexcept {
         lv_obj_set_style_grid_row_dsc_array(m_obj, row_dsc, 0);
         return *this;
     }

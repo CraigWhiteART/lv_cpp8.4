@@ -466,6 +466,14 @@ public:
         return on_simple<MemFn>(code, instance);
     }
 
+    // ==================== Manual Event Adding ====================
+
+    /// Add event callback manually with user_data
+    Derived& add_event_cb(lv_event_cb_t cb, lv_event_code_t code, void* user_data) noexcept {
+        lv_obj_add_event_cb(obj(), cb, code, user_data);
+        return *static_cast<Derived*>(this);
+    }
+
     // ==================== Removal ====================
 
     /// Remove callback descriptor by index

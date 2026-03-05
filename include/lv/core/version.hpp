@@ -406,6 +406,7 @@
  *=============================*/
 #define lv_obj_get_child_count(obj)     lv_obj_get_child_cnt(obj)
 #define lv_obj_remove_flag              lv_obj_clear_flag
+#define lv_obj_remove_state             lv_obj_clear_state
 
 /*=============================
  * Deinit API (LVGL 9.x only)
@@ -557,7 +558,29 @@ static inline lv_indev_t* lv_indev_active() { return nullptr; }
 /*=============================
  * Theme API
  *=============================*/
-#define lv_theme_get_from_obj           lv_theme_get_theme_from_obj
+// Note: lv_theme_get_from_obj is the 8.x name, 9.x uses lv_theme_get_theme_from_obj
+// Since we use lv_theme_get_from_obj in the code, we don't need a mapping for 8.x
+
+/*=============================
+ * Group API
+ *=============================*/
+#define lv_group_delete                 lv_group_del
+
+/*=============================
+ * Text API
+ *=============================*/
+#define lv_text_get_size                lv_txt_get_size
+
+/*=============================
+ * Style API - Background Image
+ *=============================*/
+#define lv_obj_set_style_bg_image_src   lv_obj_set_style_bg_img_src
+#define lv_style_set_bg_image_src       lv_style_set_bg_img_src
+
+/*=============================
+ * Buttonmatrix API
+ *=============================*/
+#define lv_buttonmatrix_ctrl_t          lv_btnmatrix_ctrl_t
 
 /*=============================
  * Timer API

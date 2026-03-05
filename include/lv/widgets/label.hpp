@@ -6,6 +6,7 @@
  */
 
 #include <lvgl.h>
+#include <cstring>
 #include "../core/object.hpp"
 #include "../core/event.hpp"
 #include "../core/style.hpp"
@@ -30,8 +31,8 @@ template<typename T> class State;
  */
 class LV_EMPTY_BASES Label : public ObjectView,
               public ObjectMixin<Label>,
-              public EventMixin<Label>,
-              public StyleMixin<Label> {
+              public StyleMixin<Label>,
+              public EventMixin<Label> {
 public:
     /// Default constructor (null label)
     constexpr Label() noexcept : ObjectView(nullptr) {}
@@ -84,6 +85,24 @@ public:
     /// Get current text
     [[nodiscard]] const char* get_text() const noexcept {
         return lv_label_get_text(m_obj);
+    }
+
+    /// Set text ONLY if it differs from current text (Performance guard)
+    Label& text_if(const char* txt) noexcept {
+        if (!m_obj) return *this;
+        const char* next = txt ? txt : "";
+        const char* cur = lv_label_get_text(m_obj);
+        if (cur && std::strcmp(cur, next) == 0) return *this;
+        lv_label_set_text(m_obj, next);
+        
+        // Handle rotation-capable labels (lv_rot_label)
+        // Note: Check is performed via class name or internal flags to avoid 
+        // external header dependencies in the base library.
+        const lv_obj_class_t* cls = lv_obj_get_class(m_obj);
+        if (cls && cls->base_class == &lv_label_class && cls->instance_size > sizeof(lv_label_t)) {
+             lv_obj_invalidate(m_obj);
+        }
+        return *this;
     }
 
     // ==================== Long Mode ====================

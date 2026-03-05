@@ -14,11 +14,9 @@
 #include <cstdint>
 #include "wrap.hpp"
 #include "version.hpp"
+#include "style.hpp"
 
 namespace lv {
-
-// Forward declarations
-class Style;
 
 // ==================== Feature Detection ====================
 
@@ -105,111 +103,198 @@ public:
         return m_obj == other.m_obj;
     }
 
-    // ==================== User Data ====================
+    // ==================== Performance Getters ====================
+    // Note: These do not return *this, but the values for comparison. 
+    // They are used by Mixins' fluent _if methods.
 
-    /// Get user data pointer
-    [[nodiscard]] void* get_user_data() const noexcept {
-        return lv_obj_get_user_data(m_obj);
+    [[nodiscard]] lv_color_t get_bg_color(lv_style_selector_t sel = 0) const noexcept {
+        return lv_obj_get_style_bg_color(m_obj, sel);
     }
 
-    /// Get user data as typed pointer
-    template<typename T>
-    [[nodiscard]] T* get_user_data() const noexcept {
-        return static_cast<T*>(lv_obj_get_user_data(m_obj));
+    [[nodiscard]] lv_opa_t get_bg_opa(lv_style_selector_t sel = 0) const noexcept {
+        return lv_obj_get_style_bg_opa(m_obj, sel);
     }
 
-    // ==================== Getters (non-fluent, always public) ====================
-
-    /// Check if object has state
-    [[nodiscard]] bool has_state(lv_state_t state) const noexcept {
-        return lv_obj_has_state(m_obj, state);
+    [[nodiscard]] int32_t get_border_width(lv_style_selector_t sel = 0) const noexcept {
+        return lv_obj_get_style_border_width(m_obj, sel);
     }
 
-    /// Check if object has flag
-    [[nodiscard]] bool has_flag(lv_obj_flag_t flag) const noexcept {
-        return lv_obj_has_flag(m_obj, flag);
+    [[nodiscard]] int32_t get_radius(lv_style_selector_t sel = 0) const noexcept {
+        return lv_obj_get_style_radius(m_obj, sel);
     }
 
-    // ==================== Parent/Child ====================
-
-    /// Get parent object
-    [[nodiscard]] ObjectView parent() const noexcept {
-        return ObjectView(lv_obj_get_parent(m_obj));
+    [[nodiscard]] lv_color_t get_text_color(lv_style_selector_t sel = 0) const noexcept {
+        return lv_obj_get_style_text_color(m_obj, sel);
     }
 
-    /// Get child count
-    [[nodiscard]] uint32_t child_count() const noexcept {
-        return lv_obj_get_child_count(m_obj);
+    [[nodiscard]] const lv_font_t* get_text_font(lv_style_selector_t sel = 0) const noexcept {
+        return lv_obj_get_style_text_font(m_obj, sel);
     }
 
-    /// Get child by index
-    [[nodiscard]] ObjectView child(int32_t idx) const noexcept {
-        return ObjectView(lv_obj_get_child(m_obj, idx));
+    [[nodiscard]] lv_opa_t get_text_opa(lv_style_selector_t sel = 0) const noexcept {
+        return lv_obj_get_style_text_opa(m_obj, sel);
     }
 
-    // ==================== Deletion ====================
+    [[nodiscard]] lv_text_align_t get_text_align(lv_style_selector_t sel = 0) const noexcept {
+        return lv_obj_get_style_text_align(m_obj, sel);
+    }
 
-    /// Delete the LVGL object (use with caution - invalidates this view)
-    void del() noexcept {
-        if (m_obj) {
-            lv_obj_delete(m_obj);
-            m_obj = nullptr;
+    [[nodiscard]] int16_t get_transform_angle(lv_style_selector_t sel = 0) const noexcept {
+        return lv_obj_get_style_transform_angle(m_obj, sel);
+    }
+
+    [[nodiscard]] int16_t get_transform_zoom(lv_style_selector_t sel = 0) const noexcept {
+        return lv_obj_get_style_transform_zoom(m_obj, sel);
+    }
+
+    // ==================== Performance Guards (Internal Helpers) ====================
+    // These are named set_*_if to avoid ambiguity with fluent Mixin methods.
+    
+    ObjectView& set_bg_color_if(lv_color_t color, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_bg_color(m_obj, sel).full != color.full) {
+            lv_obj_set_style_bg_color(m_obj, color, sel);
         }
+        return *this;
     }
 
-    /// Delete all children
-    void clean() noexcept {
-        lv_obj_clean(m_obj);
+    ObjectView& set_bg_opa_if(lv_opa_t opa, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_bg_opa(m_obj, sel) != opa) {
+            lv_obj_set_style_bg_opa(m_obj, opa, sel);
+        }
+        return *this;
     }
 
-    // ==================== Geometry Getters ====================
-
-    /// Get object width
-    [[nodiscard]] int32_t get_width() const noexcept {
-        return lv_obj_get_width(m_obj);
+    ObjectView& set_border_width_if(int32_t width, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_border_width(m_obj, sel) != width) {
+            lv_obj_set_style_border_width(m_obj, width, sel);
+        }
+        return *this;
     }
 
-    /// Get object height
-    [[nodiscard]] int32_t get_height() const noexcept {
-        return lv_obj_get_height(m_obj);
+    ObjectView& set_radius_if(int32_t radius, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_radius(m_obj, sel) != radius) {
+            lv_obj_set_style_radius(m_obj, radius, sel);
+        }
+        return *this;
     }
 
-    /// Get content width (excluding padding)
-    [[nodiscard]] int32_t content_width() const noexcept {
-        return lv_obj_get_content_width(m_obj);
+    ObjectView& set_pad_all_if(int32_t pad, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_pad_top(m_obj, sel) != pad ||
+            lv_obj_get_style_pad_bottom(m_obj, sel) != pad ||
+            lv_obj_get_style_pad_left(m_obj, sel) != pad ||
+            lv_obj_get_style_pad_right(m_obj, sel) != pad) {
+            lv_obj_set_style_pad_all(m_obj, pad, sel);
+        }
+        return *this;
     }
 
-    /// Get content height (excluding padding)
-    [[nodiscard]] int32_t content_height() const noexcept {
-        return lv_obj_get_content_height(m_obj);
+    ObjectView& set_text_color_if(lv_color_t color, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_text_color(m_obj, sel).full != color.full) {
+            lv_obj_set_style_text_color(m_obj, color, sel);
+        }
+        return *this;
     }
 
-    /// Get object coordinates
-    void get_coords(lv_area_t* area) const noexcept {
-        lv_obj_get_coords(m_obj, area);
+    ObjectView& set_text_font_if(const lv_font_t* font, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_text_font(m_obj, sel) != font) {
+            lv_obj_set_style_text_font(m_obj, font, sel);
+        }
+        return *this;
     }
 
-    // ==================== Scroll Getters ====================
-
-    /// Get horizontal scroll position
-    [[nodiscard]] int32_t scroll_x() const noexcept {
-        return lv_obj_get_scroll_x(m_obj);
+    ObjectView& set_text_opa_if(lv_opa_t opa, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_text_opa(m_obj, sel) != opa) {
+            lv_obj_set_style_text_opa(m_obj, opa, sel);
+        }
+        return *this;
     }
 
-    /// Get vertical scroll position
-    [[nodiscard]] int32_t scroll_y() const noexcept {
-        return lv_obj_get_scroll_y(m_obj);
+    ObjectView& set_text_align_if(lv_text_align_t align, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_text_align(m_obj, sel) != align) {
+            lv_obj_set_style_text_align(m_obj, align, sel);
+        }
+        return *this;
     }
 
-    // ==================== Extended Draw Size ====================
-
-    /// Calculate the extra draw size needed for a part (shadow, outline, etc.)
-    [[nodiscard]] int32_t calculate_ext_draw_size(lv_part_t part = LV_PART_MAIN) const noexcept {
-        return lv_obj_calculate_ext_draw_size(m_obj, part);
+    ObjectView& set_transform_angle_if(int16_t angle, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_transform_angle(m_obj, sel) != angle) {
+            lv_obj_set_style_transform_angle(m_obj, angle, sel);
+        }
+        return *this;
     }
+
+    ObjectView& set_transform_zoom_if(int16_t zoom, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_transform_zoom(m_obj, sel) != zoom) {
+            lv_obj_set_style_transform_zoom(m_obj, zoom, sel);
+        }
+        return *this;
+    }
+
+    ObjectView& set_long_mode_if(lv_label_long_mode_t mode) noexcept {
+        if (lv_label_get_long_mode(m_obj) != mode) {
+            lv_label_set_long_mode(m_obj, mode);
+        }
+        return *this;
+    }
+
+    ObjectView& set_size_if(int32_t w, int32_t h) noexcept {
+        if (lv_obj_get_width(m_obj) != w || lv_obj_get_height(m_obj) != h) {
+            lv_obj_set_size(m_obj, w, h);
+        }
+        return *this;
+    }
+
+    ObjectView& set_width_if(int32_t w) noexcept {
+        if (lv_obj_get_width(m_obj) != w) {
+            lv_obj_set_width(m_obj, w);
+        }
+        return *this;
+    }
+
+    ObjectView& set_height_if(int32_t h) noexcept {
+        if (lv_obj_get_height(m_obj) != h) {
+            lv_obj_set_height(m_obj, h);
+        }
+        return *this;
+    }
+
+    ObjectView& set_pos_if(int32_t x, int32_t y) noexcept {
+        if (lv_obj_get_x(m_obj) != x || lv_obj_get_y(m_obj) != y) {
+            lv_obj_set_pos(m_obj, x, y);
+        }
+        return *this;
+    }
+
+    ObjectView& set_x_if(int32_t x) noexcept {
+        if (lv_obj_get_x(m_obj) != x) {
+            lv_obj_set_x(m_obj, x);
+        }
+        return *this;
+    }
+
+    ObjectView& set_y_if(int32_t y) noexcept {
+        if (lv_obj_get_y(m_obj) != y) {
+            lv_obj_set_y(m_obj, y);
+        }
+        return *this;
+    }
+
+    ObjectView& set_align_if(lv_align_t alignment, int32_t x_ofs = 0, int32_t y_ofs = 0) noexcept {
+        lv_obj_align(m_obj, alignment, x_ofs, y_ofs);
+        return *this;
+    }
+
+    ObjectView& set_visible_if(bool v) noexcept {
+        bool cur = lv_obj_has_flag(m_obj, LV_OBJ_FLAG_HIDDEN);
+        if (v && cur) lv_obj_remove_flag(m_obj, LV_OBJ_FLAG_HIDDEN);
+        else if (!v && !cur) lv_obj_add_flag(m_obj, LV_OBJ_FLAG_HIDDEN);
+        return *this;
+    }
+
+    ObjectView& set_show_if() noexcept { return set_visible_if(true); }
+    ObjectView& set_hide_if() noexcept { return set_visible_if(false); }
 
 };
-
 
 /**
  * @brief Owning wrapper for LVGL object with RAII semantics
@@ -278,6 +363,193 @@ public:
             lv_obj_delete(m_obj);
         }
         m_obj = obj;
+    }
+
+    // ==================== Performance Guards (_if variants) ====================
+    // Note: These are moved here to be accessible via ObjectView (non-owning views)
+    // while maintaining their fluent return types when called on derived widgets.
+    
+    /// Set size ONLY if it differs from current size
+    ObjectView& size_if(int32_t w, int32_t h) noexcept {
+        if (lv_obj_get_width(m_obj) != w || lv_obj_get_height(m_obj) != h) {
+            lv_obj_set_size(m_obj, w, h);
+        }
+        return *this;
+    }
+
+    /// Set width ONLY if it differs from current width
+    ObjectView& width_if(int32_t w) noexcept {
+        if (lv_obj_get_width(m_obj) != w) {
+            lv_obj_set_width(m_obj, w);
+        }
+        return *this;
+    }
+
+    /// Set height ONLY if it differs from current height
+    ObjectView& height_if(int32_t h) noexcept {
+        if (lv_obj_get_height(m_obj) != h) {
+            lv_obj_set_height(m_obj, h);
+        }
+        return *this;
+    }
+
+    /// Set position ONLY if it differs from current position
+    ObjectView& pos_if(int32_t x, int32_t y) noexcept {
+        if (lv_obj_get_x(m_obj) != x || lv_obj_get_y(m_obj) != y) {
+            lv_obj_set_pos(m_obj, x, y);
+        }
+        return *this;
+    }
+
+    /// Set X ONLY if changed
+    ObjectView& x_if(int32_t x) noexcept {
+        if (lv_obj_get_x(m_obj) != x) {
+            lv_obj_set_x(m_obj, x);
+        }
+        return *this;
+    }
+
+    /// Set Y ONLY if changed
+    ObjectView& y_if(int32_t y) noexcept {
+        if (lv_obj_get_y(m_obj) != y) {
+            lv_obj_set_y(m_obj, y);
+        }
+        return *this;
+    }
+
+    /// Set alignment ONLY if target resolved coordinates differ
+    ObjectView& align_if(lv_align_t alignment, int32_t x_ofs, int32_t y_ofs) noexcept {
+        if (alignment == LV_ALIGN_CENTER) {
+            lv_obj_t* p = lv_obj_get_parent(m_obj);
+            if (p) {
+                int32_t pw = lv_obj_get_width(p);
+                int32_t ph = lv_obj_get_height(p);
+                int32_t ow = lv_obj_get_width(m_obj);
+                int32_t oh = lv_obj_get_height(m_obj);
+                int32_t tx = (pw - ow) / 2 + x_ofs;
+                int32_t ty = (ph - oh) / 2 + y_ofs;
+                if (lv_obj_get_x(m_obj) == tx && lv_obj_get_y(m_obj) == ty) {
+                    return *this;
+                }
+            }
+        }
+        lv_obj_align(m_obj, alignment, x_ofs, y_ofs);
+        return *this;
+    }
+
+    /// Show ONLY if hidden
+    ObjectView& show_if() noexcept {
+        if (lv_obj_has_flag(m_obj, LV_OBJ_FLAG_HIDDEN)) {
+            lv_obj_remove_flag(m_obj, LV_OBJ_FLAG_HIDDEN);
+        }
+        return *this;
+    }
+
+    /// Hide ONLY if visible
+    ObjectView& hide_if() noexcept {
+        if (!lv_obj_has_flag(m_obj, LV_OBJ_FLAG_HIDDEN)) {
+            lv_obj_add_flag(m_obj, LV_OBJ_FLAG_HIDDEN);
+        }
+        return *this;
+    }
+
+    /// Set visibility ONLY if changed
+    ObjectView& visible_if(bool v) noexcept {
+        bool cur = lv_obj_has_flag(m_obj, LV_OBJ_FLAG_HIDDEN);
+        if (v && cur) lv_obj_remove_flag(m_obj, LV_OBJ_FLAG_HIDDEN);
+        else if (!v && !cur) lv_obj_add_flag(m_obj, LV_OBJ_FLAG_HIDDEN);
+        return *this;
+    }
+
+    // ==================== Performance Guards (Style _if variants) ====================
+
+    /// Set text color ONLY if it differs
+    ObjectView& text_color_if(lv_color_t color, lv_style_selector_t selector = 0) noexcept {
+        if (lv_obj_get_style_text_color(m_obj, selector).full != color.full) {
+            lv_obj_set_style_text_color(m_obj, color, selector);
+        }
+        return *this;
+    }
+
+    /// Set text font ONLY if it differs
+    ObjectView& text_font_if(const lv_font_t* font, lv_style_selector_t selector = 0) noexcept {
+        if (lv_obj_get_style_text_font(m_obj, selector) != font) {
+            lv_obj_set_style_text_font(m_obj, font, selector);
+        }
+        return *this;
+    }
+
+    /// Set background color ONLY if it differs
+    ObjectView& bg_color_if(lv_color_t color, lv_style_selector_t selector = 0) noexcept {
+        if (lv_obj_get_style_bg_color(m_obj, selector).full != color.full) {
+            lv_obj_set_style_bg_color(m_obj, color, selector);
+        }
+        return *this;
+    }
+
+    /// Set background opacity ONLY if it differs
+    ObjectView& bg_opa_if(lv_opa_t opa, lv_style_selector_t selector = 0) noexcept {
+        if (lv_obj_get_style_bg_opa(m_obj, selector) != opa) {
+            lv_obj_set_style_bg_opa(m_obj, opa, selector);
+        }
+        return *this;
+    }
+
+    /// Set border width ONLY if it differs
+    ObjectView& border_width_if(lv_coord_t width, lv_style_selector_t selector = 0) noexcept {
+        if (lv_obj_get_style_border_width(m_obj, selector) != width) {
+            lv_obj_set_style_border_width(m_obj, width, selector);
+        }
+        return *this;
+    }
+
+    /// Set transform angle ONLY if it differs
+    ObjectView& transform_angle_if(int16_t angle, lv_style_selector_t selector = 0) noexcept {
+        if (lv_obj_get_style_transform_angle(m_obj, selector) != angle) {
+            lv_obj_set_style_transform_angle(m_obj, angle, selector);
+        }
+        return *this;
+    }
+
+    /// Set transform zoom ONLY if it differs
+    ObjectView& transform_zoom_if(int16_t zoom, lv_style_selector_t selector = 0) noexcept {
+        if (lv_obj_get_style_transform_zoom(m_obj, selector) != zoom) {
+            lv_obj_set_style_transform_zoom(m_obj, zoom, selector);
+        }
+        return *this;
+    }
+
+    /// Set arc line color ONLY if it differs
+    ObjectView& arc_color_if(lv_color_t color, lv_style_selector_t selector = 0) noexcept {
+        if (lv_obj_get_style_arc_color(m_obj, selector).full != color.full) {
+            lv_obj_set_style_arc_color(m_obj, color, selector);
+        }
+        return *this;
+    }
+
+    /// Set opa ONLY if it differs
+    ObjectView& opa_if(lv_opa_t opa, lv_style_selector_t selector = 0) noexcept {
+        if (lv_obj_get_style_opa(m_obj, selector) != opa) {
+            lv_obj_set_style_opa(m_obj, opa, selector);
+        }
+        return *this;
+    }
+
+    /// Set style property by color ONLY if it differs
+    ObjectView& part_color_if(lv_color_t color, lv_style_selector_t selector = 0) noexcept {
+        // This is a generic helper used in some parts of the code for arc/line parts
+        if (lv_obj_get_style_arc_color(m_obj, selector).full != color.full) {
+            lv_obj_set_style_arc_color(m_obj, color, selector);
+        }
+        return *this;
+    }
+
+    /// Set style opa by part ONLY if it differs
+    ObjectView& part_opa_if(lv_opa_t opa, lv_style_selector_t selector = 0) noexcept {
+        if (lv_obj_get_style_opa(m_obj, selector) != opa) {
+            lv_obj_set_style_opa(m_obj, opa, selector);
+        }
+        return *this;
     }
 };
 
@@ -381,6 +653,33 @@ public:
         return *static_cast<Derived*>(this);
     }
 
+    /// Set size ONLY if it differs from current size (Performance guard)
+    Derived& size_if(int32_t w, int32_t h) noexcept {
+        lv_obj_t* p = obj();
+        if (lv_obj_get_width(p) != w || lv_obj_get_height(p) != h) {
+            lv_obj_set_size(p, w, h);
+        }
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set width ONLY if it differs from current width
+    Derived& width_if(int32_t w) noexcept {
+        lv_obj_t* p = obj();
+        if (lv_obj_get_width(p) != w) {
+            lv_obj_set_width(p, w);
+        }
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set height ONLY if it differs from current height
+    Derived& height_if(int32_t h) noexcept {
+        lv_obj_t* p = obj();
+        if (lv_obj_get_height(p) != h) {
+            lv_obj_set_height(p, h);
+        }
+        return *static_cast<Derived*>(this);
+    }
+
     // ==================== Position ====================
 
     /// Set position relative to parent
@@ -401,6 +700,33 @@ public:
         return *static_cast<Derived*>(this);
     }
 
+    /// Set position ONLY if it differs from current position
+    Derived& pos_if(int32_t x, int32_t y) noexcept {
+        lv_obj_t* p = obj();
+        if (lv_obj_get_x(p) != x || lv_obj_get_y(p) != y) {
+            lv_obj_set_pos(p, x, y);
+        }
+        return *static_cast<Derived*>(this);
+    }
+    
+    /// Set X ONLY if changed
+    Derived& x_if(int32_t x) noexcept {
+        lv_obj_t* p = obj();
+        if (lv_obj_get_x(p) != x) {
+            lv_obj_set_x(p, x);
+        }
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set Y ONLY if changed
+    Derived& y_if(int32_t y) noexcept {
+        lv_obj_t* p = obj();
+        if (lv_obj_get_y(p) != y) {
+            lv_obj_set_y(p, y);
+        }
+        return *static_cast<Derived*>(this);
+    }
+
     // ==================== Alignment ====================
 
     /// Align relative to parent with offset
@@ -412,6 +738,29 @@ public:
     /// Set alignment mode (without changing position)
     Derived& align(lv_align_t alignment) noexcept {
         lv_obj_set_align(obj(), alignment);
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set alignment ONLY if target resolved coordinates differ (Performance guard)
+    /// Note: Currently only manual implementation for LV_ALIGN_CENTER (most common).
+    /// Fallbacks to lv_obj_align if alignment is not CENTER.
+    Derived& align_if(lv_align_t alignment, int32_t x_ofs = 0, int32_t y_ofs = 0) noexcept {
+        lv_obj_t* m_obj = obj();
+        if (alignment == LV_ALIGN_CENTER) {
+            lv_obj_t* p = lv_obj_get_parent(m_obj);
+            if (p) {
+                int32_t pw = lv_obj_get_width(p);
+                int32_t ph = lv_obj_get_height(p);
+                int32_t ow = lv_obj_get_width(m_obj);
+                int32_t oh = lv_obj_get_height(m_obj);
+                int32_t tx = (pw - ow) / 2 + x_ofs;
+                int32_t ty = (ph - oh) / 2 + y_ofs;
+                if (lv_obj_get_x(m_obj) == tx && lv_obj_get_y(m_obj) == ty) {
+                    return *static_cast<Derived*>(this);
+                }
+            }
+        }
+        lv_obj_align(m_obj, alignment, x_ofs, y_ofs);
         return *static_cast<Derived*>(this);
     }
 
@@ -451,7 +800,32 @@ public:
         else lv_obj_add_flag(obj(), LV_OBJ_FLAG_HIDDEN);
         return *static_cast<Derived*>(this);
     }
+    /// Set visibility ONLY if changed
+    Derived& visible_if(bool v) noexcept {
+        lv_obj_t* m_obj = obj();
+        bool cur = lv_obj_has_flag(m_obj, LV_OBJ_FLAG_HIDDEN);
+        if (v && cur) lv_obj_remove_flag(m_obj, LV_OBJ_FLAG_HIDDEN);
+        else if (!v && !cur) lv_obj_add_flag(m_obj, LV_OBJ_FLAG_HIDDEN);
+        return *static_cast<Derived*>(this);
+    }
 
+    /// Show ONLY if hidden
+    Derived& show_if() noexcept {
+        lv_obj_t* m_obj = obj();
+        if (lv_obj_has_flag(m_obj, LV_OBJ_FLAG_HIDDEN)) {
+            lv_obj_remove_flag(m_obj, LV_OBJ_FLAG_HIDDEN);
+        }
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Hide ONLY if visible
+    Derived& hide_if() noexcept {
+        lv_obj_t* m_obj = obj();
+        if (!lv_obj_has_flag(m_obj, LV_OBJ_FLAG_HIDDEN)) {
+            lv_obj_add_flag(m_obj, LV_OBJ_FLAG_HIDDEN);
+        }
+        return *static_cast<Derived*>(this);
+    }
     // ==================== Flags ====================
 
     /// Set clickable flag
@@ -473,6 +847,16 @@ public:
         return *static_cast<Derived*>(this);
     }
 
+    /// Compatibility alias for remove_flag
+    Derived& clear_flag(lv_obj_flag_t flag) noexcept {
+        return remove_flag(flag);
+    }
+
+    /// Query object flags
+    [[nodiscard]] bool has_flag(lv_obj_flag_t flag) const noexcept {
+        return lv_obj_has_flag(obj(), flag);
+    }
+
     // ==================== State ====================
 
     /// Add state flags
@@ -484,6 +868,30 @@ public:
     /// Remove state flags
     Derived& remove_state(lv_state_t state) noexcept {
         lv_obj_remove_state(obj(), state);
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Compatibility alias for clear state
+    Derived& clear_state(lv_state_t state) noexcept {
+        lv_obj_clear_state(obj(), state);
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Set state ONLY if it differs (Performance guard)
+    Derived& add_state_if(lv_state_t state) noexcept {
+        lv_obj_t* m_obj = obj();
+        if (!lv_obj_has_state(m_obj, state)) {
+            lv_obj_add_state(m_obj, state);
+        }
+        return *static_cast<Derived*>(this);
+    }
+
+    /// Clear state ONLY if it exists (Performance guard)
+    Derived& clear_state_if(lv_state_t state) noexcept {
+        lv_obj_t* m_obj = obj();
+        if (lv_obj_has_state(m_obj, state)) {
+            lv_obj_clear_state(m_obj, state);
+        }
         return *static_cast<Derived*>(this);
     }
 
@@ -512,6 +920,11 @@ public:
     template<typename T>
     [[nodiscard]] T* user_data_as() const noexcept {
         return static_cast<T*>(lv_obj_get_user_data(obj()));
+    }
+
+    /// Get object coordinates
+    void get_coords(lv_area_t* area) const noexcept {
+        lv_obj_get_coords(obj(), area);
     }
 
     // ==================== Scrolling ====================
@@ -607,28 +1020,27 @@ public:
 
     // ==================== Style ====================
 
-    /// Add a style to the object
-    Derived& add_style(const lv_style_t* style, lv_style_selector_t selector = 0) noexcept {
+    /// Add a style to the object (LVGL 8.x compatible - non-const style pointer)
+    Derived& add_style(lv_style_t* style, lv_style_selector_t selector = 0) noexcept {
         lv_obj_add_style(obj(), style, selector);
         return *static_cast<Derived*>(this);
     }
 
-    /// Prevent adding temporary Style objects (would leave dangling style pointer in LVGL)
-    Derived& add_style(Style&&, lv_style_selector_t = 0) noexcept = delete;
-
     /// Remove a style from the object
-    Derived& remove_style(const lv_style_t* style, lv_style_selector_t selector = 0) noexcept {
+    Derived& remove_style(lv_style_t* style, lv_style_selector_t selector = 0) noexcept {
         lv_obj_remove_style(obj(), style, selector);
         return *static_cast<Derived*>(this);
     }
-
-    /// Prevent removing temporary Style objects (nonsensical / likely bug)
-    Derived& remove_style(Style&&, lv_style_selector_t = 0) noexcept = delete;
 
     /// Remove all styles
     Derived& remove_all_styles() noexcept {
         lv_obj_remove_style_all(obj());
         return *static_cast<Derived*>(this);
+    }
+
+    /// Compatibility alias for remove_all_styles
+    Derived& remove_style_all() noexcept {
+        return remove_all_styles();
     }
 
 #if LV_VERSION_AT_LEAST(9, 5, 0)

@@ -73,6 +73,22 @@ public:
         return *this;
     }
 
+    /// Set angles ONLY if they differ (Performance guard)
+    Arc& angles_if(uint16_t start, uint16_t end) noexcept {
+        if (lv_arc_get_angle_start(m_obj) != start || lv_arc_get_angle_end(m_obj) != end) {
+            lv_arc_set_angles(m_obj, start, end);
+        }
+        return *this;
+    }
+
+    /// Set background angles ONLY if they differ
+    Arc& bg_angles_if(uint16_t start, uint16_t end) noexcept {
+        if (lv_arc_get_bg_angle_start(m_obj) != start || lv_arc_get_bg_angle_end(m_obj) != end) {
+            lv_arc_set_bg_angles(m_obj, start, end);
+        }
+        return *this;
+    }
+
     // ==================== Value ====================
 
     /// Set current value

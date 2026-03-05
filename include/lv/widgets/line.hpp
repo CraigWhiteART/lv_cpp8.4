@@ -36,18 +36,25 @@ public:
 
     // ==================== Points ====================
 
-    /// Set points array (must remain valid while line exists)
+#if LV_VERSION_AT_LEAST(9, 0, 0)
+    /// Set points array (must remain valid while line exists) - LVGL 9.x uses lv_point_precise_t
     Line& points(const lv_point_precise_t* point_array, uint32_t point_count) noexcept {
         lv_line_set_points(m_obj, point_array, point_count);
         return *this;
     }
 
-    /// Set points from lv_point_t array
+    /// Set points from lv_point_t array (LVGL 9.x)
     Line& points(const lv_point_t* point_array, uint32_t point_count) noexcept {
-        // Note: lv_point_t and lv_point_precise_t may differ based on LV_USE_FLOAT
         lv_line_set_points(m_obj, reinterpret_cast<const lv_point_precise_t*>(point_array), point_count);
         return *this;
     }
+#else
+    /// Set points array (must remain valid while line exists) - LVGL 8.x uses lv_point_t
+    Line& points(const lv_point_t* point_array, uint32_t point_count) noexcept {
+        lv_line_set_points(m_obj, point_array, static_cast<uint16_t>(point_count));
+        return *this;
+    }
+#endif
 
     // ==================== Appearance ====================
 
