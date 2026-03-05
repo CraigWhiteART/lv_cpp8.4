@@ -33,6 +33,7 @@ public:
 private:
     void on_gesture(lv::Event e);
     void on_long_press(lv::Event e);
+    void on_snake_click(lv::Event e);  // Opens the snake game screen
     static void on_scroll(lv::Event e);  // Stateless, no user_data needed
 
     lv_obj_t* m_screen = nullptr;
@@ -119,6 +120,30 @@ inline void ControlScreen::create(DemoController& controller) {
                 .align(lv::kAlign::center)
                 .remove_flag(lv::kFlag::clickable);
         }
+    }
+
+    // ── Snake game button (bottom of settings menu) ───────────────────────
+    {
+        auto snake_row = lv::hbox(lv::ObjectView(m_screen))
+            .size(345, 80)
+            .add_flag(lv::kFlag::snappable)
+            .add_flag(lv::kFlag::scroll_on_focus);
+
+        auto snake_btn = lv::Box::create(snake_row);
+        snake_btn.remove_all_styles()
+            .fill()
+            .bg_color(lv::rgb(0x166534))
+            .bg_opa(lv::opa::cover)
+            .radius(40)
+            .add_flag(lv::kFlag::clickable)
+            .remove_flag(lv::kFlag::scrollable);
+        snake_btn.on_click<&ControlScreen::on_snake_click>(this);
+
+        lv::Label::create(snake_btn)
+            .text("SNAKE GAME")
+            .text_color(lv::rgb(0x4ade80))
+            .align(lv::kAlign::center)
+            .letter_space(3);
     }
 
     lv::Box(lv::wrap, m_screen).update_snap(lv::kAnim::on).scroll_by(0, -1, lv::kAnim::on);
