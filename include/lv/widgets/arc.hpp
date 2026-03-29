@@ -218,6 +218,14 @@ public:
         return *this;
     }
 
+    /// Set indicator color ONLY if changed
+    Arc& indicator_color_if(lv_color_t color) noexcept {
+        if (lv_obj_get_style_arc_color(m_obj, LV_PART_INDICATOR).full != color.full) {
+            lv_obj_set_style_arc_color(m_obj, color, LV_PART_INDICATOR);
+        }
+        return *this;
+    }
+
     /// Set background arc color
     Arc& arc_color(lv_color_t color) noexcept {
         lv_obj_set_style_arc_color(m_obj, color, LV_PART_MAIN);
@@ -230,9 +238,25 @@ public:
         return *this;
     }
 
+    /// Set indicator width ONLY if changed
+    Arc& indicator_width_if(int32_t w) noexcept {
+        if (lv_obj_get_style_arc_width(m_obj, LV_PART_INDICATOR) != w) {
+            lv_obj_set_style_arc_width(m_obj, w, LV_PART_INDICATOR);
+        }
+        return *this;
+    }
+
     /// Set background arc width
     Arc& arc_width(int32_t w) noexcept {
         lv_obj_set_style_arc_width(m_obj, w, LV_PART_MAIN);
+        return *this;
+    }
+
+    /// Set background arc width ONLY if changed
+    Arc& arc_width_if(int32_t w) noexcept {
+        if (lv_obj_get_style_arc_width(m_obj, LV_PART_MAIN) != w) {
+            lv_obj_set_style_arc_width(m_obj, w, LV_PART_MAIN);
+        }
         return *this;
     }
 
@@ -257,6 +281,22 @@ public:
     /// Set indicator opacity
     Arc& indicator_opa(lv_opa_t opa) noexcept {
         lv_obj_set_style_arc_opa(m_obj, opa, LV_PART_INDICATOR);
+        return *this;
+    }
+
+    /// Set indicator opacity ONLY if changed
+    Arc& indicator_opa_if(lv_opa_t opa) noexcept {
+        if (lv_obj_get_style_arc_opa(m_obj, LV_PART_INDICATOR) != opa) {
+            lv_obj_set_style_arc_opa(m_obj, opa, LV_PART_INDICATOR);
+        }
+        return *this;
+    }
+
+    /// Set background arc opacity ONLY if changed
+    Arc& arc_opa_if(lv_opa_t opa, lv_style_selector_t sel = LV_PART_MAIN) noexcept {
+        if (lv_obj_get_style_arc_opa(m_obj, sel) != opa) {
+            lv_obj_set_style_arc_opa(m_obj, opa, sel);
+        }
         return *this;
     }
 
