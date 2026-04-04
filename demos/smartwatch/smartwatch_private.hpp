@@ -52,6 +52,7 @@ class DemoController;
 class ControlScreen;
 class HealthScreen;
 class MusicScreen;
+class SnakeScreen;
 class SportsScreen;
 class WeatherScreen;
 

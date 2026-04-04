@@ -171,6 +171,20 @@ public:
         return *this;
     }
 
+    ObjectView& set_shadow_opa_if(lv_opa_t opa, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_shadow_opa(m_obj, sel) != opa) {
+            lv_obj_set_style_shadow_opa(m_obj, opa, sel);
+        }
+        return *this;
+    }
+
+    ObjectView& set_shadow_color_if(lv_color_t color, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_shadow_color(m_obj, sel).full != color.full) {
+            lv_obj_set_style_shadow_color(m_obj, color, sel);
+        }
+        return *this;
+    }
+
     ObjectView& set_radius_if(int32_t radius, lv_style_selector_t sel = 0) noexcept {
         if (lv_obj_get_style_radius(m_obj, sel) != radius) {
             lv_obj_set_style_radius(m_obj, radius, sel);

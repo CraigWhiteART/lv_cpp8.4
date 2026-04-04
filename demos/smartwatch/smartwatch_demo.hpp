@@ -16,6 +16,7 @@
 #include "smartwatch_health.hpp"
 #include "smartwatch_sports.hpp"
 #include "smartwatch_music.hpp"
+#include "smartwatch_snake.hpp"
 
 // Font declarations
 LV_FONT_DECLARE(font_roboto_serif_bold_164);
@@ -46,6 +47,7 @@ public:
     [[nodiscard]] HealthScreen& health_screen() { return m_health_screen; }
     [[nodiscard]] SportsScreen& sports_screen() { return m_sports_screen; }
     [[nodiscard]] MusicScreen& music_screen() { return m_music_screen; }
+    [[nodiscard]] SnakeScreen& snake_screen() { return m_snake_screen; }
 
     // Set shared UI elements (called during demo creation)
     void set_arc_cont(lv_obj_t* obj) { m_arc_cont = obj; }
@@ -64,6 +66,7 @@ private:
     HealthScreen m_health_screen;
     SportsScreen m_sports_screen;
     MusicScreen m_music_screen;
+    SnakeScreen m_snake_screen;
 };
 
 /**
@@ -228,6 +231,7 @@ inline void SmartwatchDemo::create() {
     m_controller.health_screen().create(m_controller);
     m_controller.sports_screen().create(m_controller);
     m_controller.music_screen().create(m_controller);
+    m_controller.snake_screen().create(m_controller);
 
     // Arc container
     auto arc_cont = lv::Box::create(screen);
