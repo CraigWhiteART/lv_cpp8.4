@@ -294,7 +294,11 @@ public:
     }
 
     ObjectView& set_align_if(lv_align_t alignment, int32_t x_ofs = 0, int32_t y_ofs = 0) noexcept {
-        lv_obj_align(m_obj, alignment, x_ofs, y_ofs);
+        if (lv_obj_get_style_align(m_obj, 0) != alignment ||
+            lv_obj_get_style_x(m_obj, 0) != x_ofs ||
+            lv_obj_get_style_y(m_obj, 0) != y_ofs) {
+            lv_obj_align(m_obj, alignment, x_ofs, y_ofs);
+        }
         return *this;
     }
 

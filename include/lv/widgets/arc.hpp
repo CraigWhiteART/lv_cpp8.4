@@ -300,9 +300,31 @@ public:
         return *this;
     }
 
+    /// Set background arc rounded
+    Arc& arc_rounded(bool rounded) noexcept {
+        lv_obj_set_style_arc_rounded(m_obj, rounded, LV_PART_MAIN);
+        return *this;
+    }
+
+    /// Set background arc rounded ONLY if changed
+    Arc& arc_rounded_if(bool rounded) noexcept {
+        if (lv_obj_get_style_arc_rounded(m_obj, LV_PART_MAIN) != rounded) {
+            lv_obj_set_style_arc_rounded(m_obj, rounded, LV_PART_MAIN);
+        }
+        return *this;
+    }
+
     /// Set indicator arc rounded
     Arc& indicator_rounded(bool rounded) noexcept {
         lv_obj_set_style_arc_rounded(m_obj, rounded, LV_PART_INDICATOR);
+        return *this;
+    }
+
+    /// Set indicator arc rounded ONLY if changed
+    Arc& indicator_rounded_if(bool rounded) noexcept {
+        if (lv_obj_get_style_arc_rounded(m_obj, LV_PART_INDICATOR) != rounded) {
+            lv_obj_set_style_arc_rounded(m_obj, rounded, LV_PART_INDICATOR);
+        }
         return *this;
     }
 
