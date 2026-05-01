@@ -47,9 +47,15 @@ inline void sleep_ms(uint32_t ms) noexcept {
 #elif defined(_WIN32)
     Sleep(ms);
 #else
-    // Fallback: busy wait (not recommended)
-    volatile uint32_t count = ms * 1000;
-    while (count--) {}
+    // Fallback: busy wait (not recommended). Keep a compiler barrier in the
+    // loop body so optimized embedded builds do not discard the delay.
+    for (uint32_t count = ms * 1000; count > 0; --count) {
+#if defined(__GNUC__) || defined(__clang__)
+        __asm__ __volatile__("" ::: "memory");
+#else
+        (void)count;
+#endif
+    }
 #endif
 }
 

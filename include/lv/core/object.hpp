@@ -171,6 +171,20 @@ public:
         return *this;
     }
 
+    ObjectView& set_shadow_opa_if(lv_opa_t opa, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_shadow_opa(m_obj, sel) != opa) {
+            lv_obj_set_style_shadow_opa(m_obj, opa, sel);
+        }
+        return *this;
+    }
+
+    ObjectView& set_shadow_color_if(lv_color_t color, lv_style_selector_t sel = 0) noexcept {
+        if (lv_obj_get_style_shadow_color(m_obj, sel).full != color.full) {
+            lv_obj_set_style_shadow_color(m_obj, color, sel);
+        }
+        return *this;
+    }
+
     ObjectView& set_radius_if(int32_t radius, lv_style_selector_t sel = 0) noexcept {
         if (lv_obj_get_style_radius(m_obj, sel) != radius) {
             lv_obj_set_style_radius(m_obj, radius, sel);
@@ -280,7 +294,11 @@ public:
     }
 
     ObjectView& set_align_if(lv_align_t alignment, int32_t x_ofs = 0, int32_t y_ofs = 0) noexcept {
-        lv_obj_align(m_obj, alignment, x_ofs, y_ofs);
+        if (lv_obj_get_style_align(m_obj, 0) != alignment ||
+            lv_obj_get_style_x(m_obj, 0) != x_ofs ||
+            lv_obj_get_style_y(m_obj, 0) != y_ofs) {
+            lv_obj_align(m_obj, alignment, x_ofs, y_ofs);
+        }
         return *this;
     }
 
