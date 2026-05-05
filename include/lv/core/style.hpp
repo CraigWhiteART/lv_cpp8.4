@@ -148,6 +148,11 @@ public:
         return *this;
     }
 
+    Style& border_post(bool post) noexcept {
+        lv_style_set_border_post(&m_style, post);
+        return *this;
+    }
+
     // ==================== Outline ====================
 
     Style& outline_color(lv_color_t color) noexcept {
@@ -604,6 +609,11 @@ public:
 
     Derived& border_width(int32_t width, lv_style_selector_t sel = 0) noexcept {
         lv_obj_set_style_border_width(obj(), width, sel);
+        return *static_cast<Derived*>(this);
+    }
+
+    Derived& border_post(bool post, lv_style_selector_t sel = 0) noexcept {
+        lv_obj_set_style_border_post(obj(), post, sel);
         return *static_cast<Derived*>(this);
     }
 
