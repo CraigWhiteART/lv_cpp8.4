@@ -14,6 +14,7 @@
 #include "../core/object.hpp"
 #include "../core/event.hpp"
 #include "../core/style.hpp"
+#include <cstring>
 #include <string_view>
 
 namespace lv {
@@ -44,7 +45,13 @@ public:
 
     /// Create a QR code widget as child of parent
     explicit QRCode(ObjectView parent)
-        : ObjectView(lv_qrcode_create(parent)) {}
+        : ObjectView(
+#if LVGL_VERSION_MAJOR < 9
+              lv_qrcode_create(parent, 150, lv_color_black(), lv_color_white())
+#else
+              lv_qrcode_create(parent)
+#endif
+          ) {}
 
     /// Wrap existing QR code object
     QRCode(lv::wrap_t, lv_obj_t* obj) noexcept
@@ -57,7 +64,11 @@ public:
      * @param size Size in pixels
      */
     QRCode& size(int32_t size) noexcept {
+#if LVGL_VERSION_MAJOR >= 9
         lv_qrcode_set_size(m_obj, size);
+#else
+        (void)size;
+#endif
         return *this;
     }
 
@@ -66,7 +77,11 @@ public:
      * @param color Dark color
      */
     QRCode& dark_color(lv_color_t color) noexcept {
+#if LVGL_VERSION_MAJOR >= 9
         lv_qrcode_set_dark_color(m_obj, color);
+#else
+        (void)color;
+#endif
         return *this;
     }
 
@@ -75,7 +90,11 @@ public:
      * @param color Light color
      */
     QRCode& light_color(lv_color_t color) noexcept {
+#if LVGL_VERSION_MAJOR >= 9
         lv_qrcode_set_light_color(m_obj, color);
+#else
+        (void)color;
+#endif
         return *this;
     }
 
@@ -87,7 +106,11 @@ public:
      * @param enable true to enable quiet zone
      */
     QRCode& quiet_zone(bool enable) noexcept {
+#if LVGL_VERSION_MAJOR >= 9
         lv_qrcode_set_quiet_zone(m_obj, enable);
+#else
+        (void)enable;
+#endif
         return *this;
     }
 
@@ -98,7 +121,11 @@ public:
      * @param text Text to encode
      */
     QRCode& data(const char* text) noexcept {
+#if LVGL_VERSION_MAJOR >= 9
         lv_qrcode_set_data(m_obj, text);
+#else
+        lv_qrcode_update(m_obj, text, text ? static_cast<uint32_t>(strlen(text)) : 0u);
+#endif
         return *this;
     }
 
@@ -119,7 +146,11 @@ public:
      * @return true if successful
      */
     [[nodiscard]] bool update(const void* data, uint32_t len) noexcept {
+#if LVGL_VERSION_MAJOR >= 9
         return lv_qrcode_update(m_obj, data, len) == LV_RESULT_OK;
+#else
+        return lv_qrcode_update(m_obj, data, len) == LV_RES_OK;
+#endif
     }
 };
 
