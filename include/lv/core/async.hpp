@@ -23,6 +23,7 @@ namespace lv {
 
 /// Cancel a pending deferred call
 [[nodiscard]] inline bool async_call_cancel(lv_async_cb_t cb, void* user_data = nullptr) noexcept {
+    if(cb == nullptr) return false;
     return lv_async_call_cancel(cb, user_data) == LV_RESULT_OK;
 }
 
