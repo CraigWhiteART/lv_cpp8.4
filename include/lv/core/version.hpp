@@ -580,7 +580,23 @@ static inline lv_indev_t* lv_indev_active() { return nullptr; }
 /*=============================
  * Buttonmatrix API
  *=============================*/
+#ifndef LV_USE_BUTTONMATRIX
+#define LV_USE_BUTTONMATRIX             LV_USE_BTNMATRIX
+#endif
 #define lv_buttonmatrix_ctrl_t          lv_btnmatrix_ctrl_t
+#define lv_buttonmatrix_create          lv_btnmatrix_create
+#define lv_buttonmatrix_set_map         lv_btnmatrix_set_map
+#define lv_buttonmatrix_set_ctrl_map    lv_btnmatrix_set_ctrl_map
+#define lv_buttonmatrix_get_selected_button lv_btnmatrix_get_selected_btn
+#define lv_buttonmatrix_set_selected_button lv_btnmatrix_set_selected_btn
+#define lv_buttonmatrix_get_button_text lv_btnmatrix_get_btn_text
+#define lv_buttonmatrix_set_button_ctrl lv_btnmatrix_set_btn_ctrl
+#define lv_buttonmatrix_clear_button_ctrl lv_btnmatrix_clear_btn_ctrl
+#define lv_buttonmatrix_set_button_ctrl_all lv_btnmatrix_set_btn_ctrl_all
+#define lv_buttonmatrix_clear_button_ctrl_all lv_btnmatrix_clear_btn_ctrl_all
+#define lv_buttonmatrix_has_button_ctrl lv_btnmatrix_has_btn_ctrl
+#define lv_buttonmatrix_set_one_checked lv_btnmatrix_set_one_checked
+#define lv_buttonmatrix_get_one_checked lv_btnmatrix_get_one_checked
 
 /*=============================
  * Timer API

@@ -38,7 +38,13 @@ public:
 
     /// Set button map (array must remain valid, last element must be "")
     ButtonMatrix& map(const char* const map_array[]) noexcept {
+#if LVGL_VERSION_MAJOR < 9
+        // LVGL 8 retains the map without writing to it, but predates the
+        // const-qualified array parameter used by LVGL 9.
+        lv_buttonmatrix_set_map(m_obj, const_cast<const char**>(map_array));
+#else
         lv_buttonmatrix_set_map(m_obj, map_array);
+#endif
         return *this;
     }
 
